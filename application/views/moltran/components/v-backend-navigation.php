@@ -1,4 +1,7 @@
-<!-- Navigation Bar-->
+<<<<<<< HEAD
+=======
+ Navigation Bar-->
+>>>>>>> 82605b4a56ab3483eea792247272805111c7e603
         <header id="topnav">
             <div class="topbar-main">
                 <div class="container">
@@ -13,6 +16,8 @@
                     <div class="menu-extras">
 
                         <ul class="nav navbar-nav navbar-right pull-right">
+                            
+
                             <li class="dropdown user-box">
                                 <a href="" class="dropdown-toggle waves-effect waves-light profile " data-toggle="dropdown" aria-expanded="true">
                                     <img src="<?php echo $params['base_image']; ?>ravi-vendra.png" alt="user-img" class="img-circle user-img">
@@ -49,158 +54,125 @@
                         <!-- Navigation Menu-->
                         <ul class="navigation-menu">
                             <li class="active">
-                                <a href="index.html"><i class="md md-home"></i> <span> Dashboard </span> </a>
+                                <a href="<?php echo @ site_url('backend/dashboard'); ?>"><i class="md md-home"></i> <span> Dashboard </span> </a>
+                            </li>
+
+
+                            <!-- <li class="has-submenu">
+                                <a href="#"><i class="md md-palette "></i><span> Elements </span> </a>
+                                <ul class="submenu">
+                                    <li><a href="typography.html">Typography</a></li>
+                                    <li><a href="buttons.html">Buttons</a></li>
+                                    <li><a href="panels.html">Panels</a></li>
+                                    <li><a href="checkbox-radio.html">Checkboxs-Radios</a></li>
+                                    <li><a href="tabs-accordions.html">Tabs &amp; Accordions</a></li>
+                                    <li><a href="modals.html">Modals</a></li>
+                                    <li><a href="bootstrap-ui.html">BS Elements</a></li>
+                                    <li><a href="progressbars.html">Progress Bars</a></li>
+                                    <li><a href="notification.html">Notification</a></li>
+                                    <li><a href="sweet-alert.html">Sweet-Alert</a></li>
+                                </ul>
                             </li>
 
                             <li class="has-submenu">
-                                <a href="#"><i class="md md-palette "></i> <span> Atur Admin </span> </a>
+                                <a href="#"><i class="md md-palette "></i> <span> Atur Outlet </span> </a>
                                 <ul class="submenu">
                                     <li class="has-submenu">
-                                        <a href="#">Admin PLASA TELKOM</a>
+                                        <a href="#">Outlet PLASA TELKOM</a>
+                                        <ul class="submenu">
+                                            <li><a href="<?php echo @ site_url('backend/admin-plasa/manage'); ?>">Manage Outlet</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="has-submenu">
+                                        <a href="#">Terminal PLASA TELKOM</a>
+                                        <ul class="submenu">
+                                            <li><a href="form-elements.html">Manage Terminal</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="has-submenu">
+                                        <a href="#">User PLASA TELKOM</a>
+                                        <ul class="submenu">
+                                            <li><a href="tables.html">Manage User</a></li>
+                                            
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li> -->
+
+                            <li class="has-submenu">
+<<<<<<< HEAD
+                                <a href="#"><i class="md md-redeem"></i> <span> Atur Admin </span> </a>
+=======
+                                <a href="#"><i class="md md-invert-colors-on"></i> <span> Log & Laporan </span> </a>
+                                <ul class="submenu">
+                                    <li><a href="grid.html">Log Browser</a></li>
+                                    <li><a href="portlets.html">Sejarah Transaksi</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="has-submenu">
+                                <a href="#"><i class="md md-invert-colors-on"></i> <span> Privatisasi </span> </a>
+                                <ul class="submenu">
+                                    <li><a href="grid.html">Profil-ku</a></li>
+                                    <li><a href="portlets.html">Ubah Password</a></li>
+                                </ul>
+                            </li>
+
+                            <!-- <li class="has-submenu">
+                                <a href="#"><i class="md md-redeem"></i> <span> Other </span> </a>
+>>>>>>> 82605b4a56ab3483eea792247272805111c7e603
+                                <ul class="submenu">
+                                    <li class="has-submenu">
+                                        <a href="#">Admin PLASA TELKOM </a>
                                         <ul class="submenu">
                                             <li><a href="<?php echo @ site_url('backend/admin-plasa/manage'); ?>">Manage Admin</a></li>
                                         </ul>
                                     </li>
-
-                                    <li class="has-submenu">
-                                        <a href="#">Forms</a>
-                                        <ul class="submenu">
-                                            <li><a href="form-elements.html">General Elements</a></li>
-                                            <li><a href="form-validation.html">Form Validation</a></li>
-                                            <li><a href="form-advanced.html">Advanced Form</a></li>
-                                            <li><a href="form-wizard.html">Form Wizard</a></li>
-                                            <li><a href="form-editor.html">WYSIWYG Editor</a></li>
-                                            <li><a href="code-editor.html">Code Editors</a></li>
-                                            <li><a href="form-uploads.html">Multiple File Upload</a></li>
-                                            <li><a href="form-xeditable.html">X-editable</a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="has-submenu">
-                                        <a href="#">Tables</a>
-                                        <ul class="submenu">
-                                            <li><a href="tables.html">Basic Tables</a></li>
-                                            <li><a href="table-datatable.html">Data Table</a></li>
-                                            <li><a href="tables-editable.html">Editable Table</a></li>
-                                            <li><a href="responsive-table.html">Responsive Table</a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="has-submenu">
-                                        <a href="#">Charts</a>
-                                        <ul class="submenu">
-                                            <li><a href="morris-chart.html">Morris Chart</a></li>
-                                            <li><a href="chartjs.html">Chartjs</a></li>
-                                            <li><a href="flot-chart.html">Flot Chart</a></li>
-                                            <li><a href="peity-chart.html">Peity Charts</a></li>
-                                            <li><a href="charts-sparkline.html">Sparkline Charts</a></li>
-                                            <li><a href="chart-radial.html">Radial charts</a></li>
-                                            <li><a href="other-chart.html">Other Chart</a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="has-submenu">
-                                        <a href="#">Maps</a>
-                                        <ul class="submenu">
-                                            <li><a href="gmap.html"> Google Map</a></li>
-                                            <li><a href="vector-map.html"> Vector Map</a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="has-submenu">
-                                        <a href="#">Mail</a>
-                                        <ul class="submenu">
-                                            <li><a href="inbox.html">Inbox</a></li>
-                                            <li><a href="email-compose.html">Compose Mail</a></li>
-                                            <li><a href="email-read.html">View Mail</a></li>
-                                        </ul>
-                                    </li>
                                 </ul>
                             </li>
 
                             <li class="has-submenu">
-                                <a href="#"><i class="md md-invert-colors-on"></i> <span> Components </span> </a>
-                                <ul class="submenu">
-                                    <li><a href="grid.html">Grid</a></li>
-                                    <li><a href="portlets.html">Portlets</a></li>
-                                    <li><a href="widgets.html">Widgets</a></li>
-                                    <li><a href="nestable-list.html">Nesteble</a></li>
-                                    <li><a href="ui-sliders.html">Sliders </a></li>
-                                    <li><a href="gallery.html">Gallery </a></li>
-                                    <li><a href="pricing.html">Pricing Table </a></li>
-                                    <li><a href="calendar.html">Calendar </a></li>
-                                </ul>
-                            </li>
-
-                            <li class="has-submenu">
-                                <a href="#"><i class="md md-redeem"></i> <span> Other </span> </a>
+                                <a href="#"><i class="md md-redeem"></i> <span> Atur Outlet </span> </a>
                                 <ul class="submenu">
                                     <li class="has-submenu">
-                                        <a href="#">Icons</a>
+                                        <a href="#">Outlet PLASA TELKOM </a>
                                         <ul class="submenu">
-                                            <li><a href="material-icon.html">Material Design</a></li>
-                                            <li><a href="ion-icons.html">Ion Icons</a></li>
-                                            <li><a href="font-awesome.html">Font awesome</a></li>
+                                            <li><a href="material-icon.html">Manage Outlet</a></li>
                                         </ul>
                                     </li>
-
                                     <li class="has-submenu">
-                                        <a href="#">Forms</a>
+                                        <a href="#">Terminal PLASA TELKOM </a>
                                         <ul class="submenu">
-                                            <li><a href="form-elements.html">General Elements</a></li>
-                                            <li><a href="form-validation.html">Form Validation</a></li>
-                                            <li><a href="form-advanced.html">Advanced Form</a></li>
-                                            <li><a href="form-wizard.html">Form Wizard</a></li>
-                                            <li><a href="form-editor.html">WYSIWYG Editor</a></li>
-                                            <li><a href="code-editor.html">Code Editors</a></li>
-                                            <li><a href="form-uploads.html">Multiple File Upload</a></li>
-                                            <li><a href="form-xeditable.html">X-editable</a></li>
+                                            <li><a href="material-icon.html">Manage Terminal</a></li>
                                         </ul>
                                     </li>
-
                                     <li class="has-submenu">
-                                        <a href="#">Tables</a>
+                                        <a href="#">User PLASA TELKOM </a>
                                         <ul class="submenu">
-                                            <li><a href="tables.html">Basic Tables</a></li>
-                                            <li><a href="table-datatable.html">Data Table</a></li>
-                                            <li><a href="tables-editable.html">Editable Table</a></li>
-                                            <li><a href="responsive-table.html">Responsive Table</a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="has-submenu">
-                                        <a href="#">Charts</a>
-                                        <ul class="submenu">
-                                            <li><a href="morris-chart.html">Morris Chart</a></li>
-                                            <li><a href="chartjs.html">Chartjs</a></li>
-                                            <li><a href="flot-chart.html">Flot Chart</a></li>
-                                            <li><a href="peity-chart.html">Peity Charts</a></li>
-                                            <li><a href="charts-sparkline.html">Sparkline Charts</a></li>
-                                            <li><a href="chart-radial.html">Radial charts</a></li>
-                                            <li><a href="other-chart.html">Other Chart</a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="has-submenu">
-                                        <a href="#">Maps</a>
-                                        <ul class="submenu">
-                                            <li><a href="gmap.html"> Google Map</a></li>
-                                            <li><a href="vector-map.html"> Vector Map</a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="has-submenu">
-                                        <a href="#">Mail</a>
-                                        <ul class="submenu">
-                                            <li><a href="inbox.html">Inbox</a></li>
-                                            <li><a href="email-compose.html">Compose Mail</a></li>
-                                            <li><a href="email-read.html">View Mail</a></li>
+                                            <li><a href="material-icon.html">Manage User</a></li>
                                         </ul>
                                     </li>
                                 </ul>
                             </li>
 
                             <li class="has-submenu">
+                                <a href="#"><i class="md md-invert-colors-on"></i> <span> Log & Laporan </span> </a>
+                                <ul class="submenu">
+                                    <li><a href="grid.html">Log Browser</a></li>
+                                    <li><a href="portlets.html">Sejarah Transaksi</a></li>                                    
+                                </ul>
+                            </li> -->
+
+<<<<<<< HEAD
+                            <li class="has-submenu">
+                                <a href="#"><i class="md md-invert-colors-on"></i> <span> Privatisasi </span> </a>
+                                <ul class="submenu">
+                                    <li><a href="grid.html">Profile-ku</a></li>
+                                    <li><a href="portlets.html">Ubah Password</a></li>                                    
+=======
+                            <!-- <li class="has-submenu">
                                 <a href="#"><i class="md md-pages"></i><span>Pages </span> </a>
                                 <ul class="submenu megamenu">
                                     <li>
@@ -226,8 +198,10 @@
                                             <li><a href="500.html">500 Error</a></li>
                                         </ul>
                                     </li>
+>>>>>>> 82605b4a56ab3483eea792247272805111c7e603
                                 </ul>
-                            </li>
+                            </li> -->
+
 
                         </ul>
                         <!-- End navigation menu  -->
@@ -235,4 +209,4 @@
                 </div>
             </div>
         </header>
-        <!-- End Navigation Bar-->
+        <!-- End Navigation Bar
