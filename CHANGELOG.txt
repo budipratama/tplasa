@@ -1,0 +1,13 @@
+Revision #4
+(+) Tambah beberapa mockup halaman
+
+Revision #3
+(+) Some first pages for Plasa Telkom
+    controllers/Frontend.php, helpers/barrel_helper.php, helpers/fusion_helper.php, views/moltran
+(i) config/autoload.php, config/config.php, config/constants.php, config/routes.php
+
+Revision #2
+(i) Add new theme for Plasa Telkom
+
+Revision #1
+(i) Using CodeIgniter 3.0.4 as the engine
