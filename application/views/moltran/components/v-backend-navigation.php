@@ -4,7 +4,7 @@
 
                     <!-- LOGO -->
                     <div class="topbar-left">
-                        <a href="index.html" class="logo"><i class="md md-terrain"></i> <span>Moltran </span></a>
+                        <a href="index.html" class="logo"><img height="40" src="<?php echo $params['base_image'] . 'favicon.png'; ?>" />&nbsp; <span>Plasa Telkom </span></a>
                     </div>
                     <!-- End Logo container-->
 
@@ -12,73 +12,11 @@
                     <div class="menu-extras">
 
                         <ul class="nav navbar-nav navbar-right pull-right">
-                            <li>
-                                <form role="search" class="navbar-left app-search pull-left hidden-xs">
-                                     <input type="text" placeholder="Search..." class="form-control">
-                                     <a href=""><i class="fa fa-search"></i></a>
-                                </form>
-                            </li>
-                            <li class="dropdown hidden-xs">
-                                <a href="#" data-target="#" class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="true">
-                                    <i class="md md-notifications"></i> <span class="badge badge-xs badge-danger">3</span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-lg">
-                                    <li class="text-center notifi-title">Notification</li>
-                                    <li class="list-group">
-                                       <!-- list item-->
-                                       <a href="javascript:void(0);" class="list-group-item">
-                                          <div class="media">
-                                             <div class="pull-left">
-                                                <em class="fa fa-user-plus fa-2x text-info"></em>
-                                             </div>
-                                             <div class="media-body clearfix">
-                                                <div class="media-heading">New user registered</div>
-                                                <p class="m-0">
-                                                   <small>You have 10 unread messages</small>
-                                                </p>
-                                             </div>
-                                          </div>
-                                       </a>
-                                       <!-- list item-->
-                                        <a href="javascript:void(0);" class="list-group-item">
-                                          <div class="media">
-                                             <div class="pull-left">
-                                                <em class="fa fa-diamond fa-2x text-primary"></em>
-                                             </div>
-                                             <div class="media-body clearfix">
-                                                <div class="media-heading">New settings</div>
-                                                <p class="m-0">
-                                                   <small>There are new settings available</small>
-                                                </p>
-                                             </div>
-                                          </div>
-                                        </a>
-                                        <!-- list item-->
-                                        <a href="javascript:void(0);" class="list-group-item">
-                                          <div class="media">
-                                             <div class="pull-left">
-                                                <em class="fa fa-bell-o fa-2x text-danger"></em>
-                                             </div>
-                                             <div class="media-body clearfix">
-                                                <div class="media-heading">Updates</div>
-                                                <p class="m-0">
-                                                   <small>There are
-                                                      <span class="text-primary">2</span> new updates available</small>
-                                                </p>
-                                             </div>
-                                          </div>
-                                        </a>
-                                       <!-- last list item -->
-                                        <a href="javascript:void(0);" class="list-group-item">
-                                          <small>See all notifications</small>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
+                           
 
                             <li class="dropdown user-box">
                                 <a href="" class="dropdown-toggle waves-effect waves-light profile " data-toggle="dropdown" aria-expanded="true">
-                                    <img src="assets/images/users/avatar-1.jpg" alt="user-img" class="img-circle user-img">
+                                    <img src="<?php echo $params['base_image']; ?>ravi-vendra.png" alt="user-img" class="img-circle user-img">
                                     <div class="user-status away"><i class="zmdi zmdi-dot-circle"></i></div>
                                 </a>
 
@@ -112,42 +50,66 @@
                         <!-- Navigation Menu-->
                         <ul class="navigation-menu">
                             <li class="active">
-                                <a href="index.html"><i class="md md-home"></i> <span> Dashboard </span> </a>
+                                <a href="<?php echo @ site_url('backend/dashboard'); ?>"><i class="md md-home"></i> <span> Dashboard </span> </a>
                             </li>
 
 
                             <li class="has-submenu">
-                                <a href="#"><i class="md md-palette "></i><span> Elements </span> </a>
+                                <a href="#"><i class="md md-redeem"></i> <span> Atur Admin </span> </a>
                                 <ul class="submenu">
-                                    <li><a href="typography.html">Typography</a></li>
-                                    <li><a href="buttons.html">Buttons</a></li>
-                                    <li><a href="panels.html">Panels</a></li>
-                                    <li><a href="checkbox-radio.html">Checkboxs-Radios</a></li>
-                                    <li><a href="tabs-accordions.html">Tabs &amp; Accordions</a></li>
-                                    <li><a href="modals.html">Modals</a></li>
-                                    <li><a href="bootstrap-ui.html">BS Elements</a></li>
-                                    <li><a href="progressbars.html">Progress Bars</a></li>
-                                    <li><a href="notification.html">Notification</a></li>
-                                    <li><a href="sweet-alert.html">Sweet-Alert</a></li>
+                                    <li class="has-submenu">
+                                        <a href="#">Admin PLASA TELKOM</a>
+                                        <ul class="submenu">
+                                            <li><a href="<?php echo @ site_url('backend/admin-plasa/manage'); ?>">Manage Admin</a></li>
+                                        </ul>
+                                    </li>
+                                 
                                 </ul>
                             </li>
 
                             <li class="has-submenu">
-                                <a href="#"><i class="md md-invert-colors-on"></i> <span> Components </span> </a>
+                                <a href="#"><i class="md md-redeem"></i> <span> Atur Outlet </span> </a>
                                 <ul class="submenu">
-                                    <li><a href="grid.html">Grid</a></li>
-                                    <li><a href="portlets.html">Portlets</a></li>
-                                    <li><a href="widgets.html">Widgets</a></li>
-                                    <li><a href="nestable-list.html">Nesteble</a></li>
-                                    <li><a href="ui-sliders.html">Sliders </a></li>
-                                    <li><a href="gallery.html">Gallery </a></li>
-                                    <li><a href="pricing.html">Pricing Table </a></li>
-                                    <li><a href="calendar.html">Calendar </a></li>
+                                    <li class="has-submenu">
+                                        <a href="#">Outlet PLASA TELKOM</a>
+                                        <ul class="submenu">
+                                            <li><a href="material-icon.html">Manage Outlet</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="has-submenu">
+                                        <a href="#">Terminal PLASA TELKOM</a>
+                                        <ul class="submenu">
+                                            <li><a href="material-icon.html">Manage Terminal</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="has-submenu">
+                                        <a href="#">User PLASA TELKOM</a>
+                                        <ul class="submenu">
+                                            <li><a href="material-icon.html">Manage User</a></li>
+                                        </ul>
+                                    </li>
+                                 
                                 </ul>
                             </li>
 
                             <li class="has-submenu">
-                                <a href="#"><i class="md md-redeem"></i> <span> Other </span> </a>
+                                <a href="#"><i class="md md-invert-colors-on"></i> <span> Log & Laporan </span> </a>
+                                <ul class="submenu">
+                                    <li><a href="grid.html">Log Browser</a></li>
+                                    <li><a href="portlets.html">Sejarah Transaksi</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="has-submenu">
+                                <a href="#"><i class="md md-invert-colors-on"></i> <span> Privatisasi </span> </a>
+                                <ul class="submenu">
+                                    <li><a href="grid.html">Profil-ku</a></li>
+                                    <li><a href="portlets.html">Ubah Password</a></li>
+                                </ul>
+                            </li>
+
+                            <!-- <li class="has-submenu">
+                                <a href="#"><i class="md md-redeem"></i> <span> Privatisasi </span> </a>
                                 <ul class="submenu">
                                     <li class="has-submenu">
                                         <a href="#">Icons</a>
@@ -212,9 +174,9 @@
                                         </ul>
                                     </li>
                                 </ul>
-                            </li>
+                            </li> -->
 
-                            <li class="has-submenu">
+                            <li class="has-submenu" style="display:none">
                                 <a href="#"><i class="md md-pages"></i><span>Pages </span> </a>
                                 <ul class="submenu megamenu">
                                     <li>
@@ -242,7 +204,6 @@
                                     </li>
                                 </ul>
                             </li>
-
                         </ul>
                         <!-- End navigation menu  -->
                     </div>
