@@ -153,6 +153,14 @@
                                 </ul>
                             </li>
 
+                            <li class="has-submenu">
+                                <a href="#"><i class="md md-invert-colors-on"></i> <span> Privatisasi </span> </a>
+                                <ul class="submenu">
+                                    <li><a href="grid.html">Profil-ku</a></li>
+                                    <li><a href="portlets.html">Ubah Password</a></li>
+                                </ul>
+                            </li>
+
                             <!-- <li class="has-submenu">
                                 <a href="#"><i class="md md-redeem"></i> <span> Other </span> </a>
                                 <ul class="submenu">
