@@ -1,4 +1,4 @@
-<!-- Navigation Bar-->
+ Navigation Bar-->
         <header id="topnav">
             <div class="topbar-main">
                 <div class="container">
@@ -49,7 +49,7 @@
                         <!-- Navigation Menu-->
                         <ul class="navigation-menu">
                             <li class="active">
-                                <a href="index.html"><i class="md md-home"></i> <span> Dashboard </span> </a>
+                                <a href="<?php echo @ site_url('backend/dashboard'); ?>"><i class="md md-home"></i> <span> Dashboard </span> </a>
                             </li>
 
                             <li class="has-submenu">
@@ -119,20 +119,41 @@
                             </li>
 
                             <li class="has-submenu">
-                                <a href="#"><i class="md md-invert-colors-on"></i> <span> Components </span> </a>
+                                <a href="#"><i class="md md-palette "></i> <span> Atur Outlet </span> </a>
                                 <ul class="submenu">
-                                    <li><a href="grid.html">Grid</a></li>
-                                    <li><a href="portlets.html">Portlets</a></li>
-                                    <li><a href="widgets.html">Widgets</a></li>
-                                    <li><a href="nestable-list.html">Nesteble</a></li>
-                                    <li><a href="ui-sliders.html">Sliders </a></li>
-                                    <li><a href="gallery.html">Gallery </a></li>
-                                    <li><a href="pricing.html">Pricing Table </a></li>
-                                    <li><a href="calendar.html">Calendar </a></li>
+                                    <li class="has-submenu">
+                                        <a href="#">Outlet PLASA TELKOM</a>
+                                        <ul class="submenu">
+                                            <li><a href="<?php echo @ site_url('backend/admin-plasa/manage'); ?>">Manage Outlet</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="has-submenu">
+                                        <a href="#">Terminal PLASA TELKOM</a>
+                                        <ul class="submenu">
+                                            <li><a href="form-elements.html">Manage Terminal</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="has-submenu">
+                                        <a href="#">User PLASA TELKOM</a>
+                                        <ul class="submenu">
+                                            <li><a href="tables.html">Manage User</a></li>
+                                            
+                                        </ul>
+                                    </li>
                                 </ul>
                             </li>
 
                             <li class="has-submenu">
+                                <a href="#"><i class="md md-invert-colors-on"></i> <span> Log & Laporan </span> </a>
+                                <ul class="submenu">
+                                    <li><a href="grid.html">Log Browser</a></li>
+                                    <li><a href="portlets.html">Sejarah Transaksi</a></li>
+                                </ul>
+                            </li>
+
+                            <!-- <li class="has-submenu">
                                 <a href="#"><i class="md md-redeem"></i> <span> Other </span> </a>
                                 <ul class="submenu">
                                     <li class="has-submenu">
@@ -198,9 +219,9 @@
                                         </ul>
                                     </li>
                                 </ul>
-                            </li>
+                            </li> -->
 
-                            <li class="has-submenu">
+                            <!-- <li class="has-submenu">
                                 <a href="#"><i class="md md-pages"></i><span>Pages </span> </a>
                                 <ul class="submenu megamenu">
                                     <li>
@@ -227,7 +248,7 @@
                                         </ul>
                                     </li>
                                 </ul>
-                            </li>
+                            </li> -->
 
                         </ul>
                         <!-- End navigation menu  -->
@@ -235,4 +256,4 @@
                 </div>
             </div>
         </header>
-        <!-- End Navigation Bar-->
+        <!-- End Navigation Bar
