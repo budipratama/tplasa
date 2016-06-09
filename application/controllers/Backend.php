@@ -145,6 +145,20 @@
 			$this->load->view((string) FUSION_DEFAULT_THEME . '/v-transaction-index', $data);
 
 		}
+
+		public function active_deactive_admin()
+		{
+			$data = array('EM_STATUS' => $_GET['activ_deactive_flag']);
+
+			$where = "EM_USERID = '{$_GET['activ_deactive_username']}'";
+
+			$str = $this->db->update_string('f_employee', $data, $where);
+			if ($this->db->query($str)) 
+				echo "1";
+			else
+				echo "0";
+
+		}
 		/**
 		 * Reset Password Admin
 		 * @param  [string] $id_admin 
@@ -153,7 +167,7 @@
 		 */
 		public function reset_password($id_admin,$password)
 		{
-			$data = array('EM_PASSWORD' => md5($_GET['reset_password']));
+			$data = array('EM_PASSWORDs' => md5($_GET['reset_password']));
 			$where = "EM_USERID = '{$_GET['id_admin']}'";
 			$str = $this->db->update_string('f_employee', $data, $where);
 			if ($this->db->query($str)) 
@@ -252,19 +266,70 @@
             
 		}
 
-		public function ajax()
+		public function ajaxTes()
 		{
 			$CI =& get_instance();
         	$CI->load->database();
 
 			$this->auth_access();
 			// DB table to use
-			$table = 'f_employee';
+			// $table = 'f_employee';
+			$table = 'f_employee,f_terminal,f_outlet,f_wallet,f_partner';
 
 			$this->load->library('ssp');
 			// Table's primary key
-			$primaryKey = 'EM_ID';
+			$primaryKey = 'f_employee.EM_ID';
 
+			// Array of database columns which should be read and sent back to DataTables.
+			// The `db` parameter represents the column name in the database, while the `dt`
+			// parameter represents the DataTables column identifier. In this case simple
+			// indexes
+			$columns = array(
+				array( 'db' => 'f_employee.EM_USERID',		'dt' => 0 ),
+				array( 'db' => 'f_partner.PA_NAME',		'dt' => 1 ),
+				array( 'db' => 'f_employee.EM_NAME',		'dt' => 2 ),
+				array( 'db' => 'f_employee.EM_STATUS',		'dt' => 3,
+					   'formatter' => function( $d, $row ) {
+			            return $d?"AKTIF":"TIDAK AKTIF";
+			        },
+				),
+				array( 'db' => 'f_employee.CREATED_ON',	'dt' => 4 ),
+				array( 'db' => 'f_employee.CREATED_BY',	'dt' => 5 ),
+				array( 'db' => 'f_employee.DV_ID',			'dt' => 6 ),
+				array( 'db' => 'f_employee.EM_STATUS',		'dt' => 7 ),
+			);
+			
+			// SQL server connection information
+			$sql_details = array(
+				'user' => $CI->db->username,
+				'pass' => $CI->db->password,
+				'db'   => $CI->db->database,
+				'host' => $CI->db->hostname
+			);
+			$role_admin = ucwords(strtolower($this->session->tempdata('flag_regional')));
+			if ($role_admin=="-1") 
+			{
+				echo json_encode(
+					$this->ssp->complex($_GET, $sql_details, $table, $primaryKey, $columns,'LV_ID = 1 AND f_employee.TR_ID = f_terminal.TR_ID AND f_terminal.OU_ID=f_outlet.OU_ID AND f_outlet.WA_ID = f_wallet.WA_ID AND f_wallet.PA_ID = f_partner.PA_ID')
+				);
+			}
+			else
+			{
+				echo json_encode(
+					$this->ssp->complex($_GET, $sql_details, $table, $primaryKey, $columns,"LV_ID = 1 AND DV_ID='$role_admin' AND f_employee.TR_ID = f_terminal.TR_ID AND f_terminal.OU_ID=f_outlet.OU_ID AND f_outlet.WA_ID = f_wallet.WA_ID AND f_wallet.PA_ID = f_partner.PA_ID")
+				);
+			}			
+		}
+		public function ajax()
+		{
+			$CI =& get_instance();
+        	$CI->load->database();
+			$this->auth_access();
+			// DB table to use
+			$table = 'f_employee';
+			$this->load->library('ssp');
+			// Table's primary key
+			$primaryKey = 'EM_ID';
 			// Array of database columns which should be read and sent back to DataTables.
 			// The `db` parameter represents the column name in the database, while the `dt`
 			// parameter represents the DataTables column identifier. In this case simple
@@ -341,9 +406,7 @@
 					$this->ssp->complex($_GET, $sql_details, $table, $primaryKey, $columns,'DV_ID!="<?=ucwords(strtolower($this->session->tempdata(\'flag_regional\')))?>"')
 				);
 			}
-
 			
 			
 		}
-
 	}
