@@ -35,18 +35,21 @@ class SSP {
 	static function data_output ( $columns, $data )
 	{
 		$out = array();
-
+		/*echo "<pre>";
+		print_r($data);*/
 		for ( $i=0, $ien=count($data) ; $i<$ien ; $i++ ) {
 			$row = array();
 
 			for ( $j=0, $jen=count($columns) ; $j<$jen ; $j++ ) {
 				$column = $columns[$j];
-
+				// echo "Column ";echo "<pre>";print_r($columns[$j]);echo "</pre>";
 				// Is there a formatter?
 				if ( isset( $column['formatter'] ) ) {
 					$row[ $column['dt'] ] = $column['formatter']( $data[$i][ $column['db'] ], $data[$i] );
+					// echo "if nilai db ".$columns['db']."<br>";
 				}
 				else {
+					// echo "else nilai db ".$columns['db']."<br>";
 					$row[ $column['dt'] ] = $data[$i][ $columns[$j]['db'] ];
 				}
 			}
@@ -235,20 +238,21 @@ class SSP {
 	{
 		$bindings = array();
 		$db = self::db( $conn );
-
+		/*echo "<pre>";
+		print_r($request);*/
 		// Build the SQL query string from the request
 		$limit = self::limit( $request, $columns );
 		$order = self::order( $request, $columns );
 		$where = self::filter( $request, $columns, $bindings );
-		/*echo "SELECT `".implode("`, `", self::pluck($columns, 'db'))."`
-			 FROM `$table`
+		/*echo "SELECT ".implode(", ", self::pluck($columns, 'db'))."
+			 FROM $table
 			 $where
 			 $order
 			 $limit";*/
 		// Main query to actually get the data
 		$data = self::sql_exec( $db, $bindings,
-			"SELECT `".implode("`, `", self::pluck($columns, 'db'))."`
-			 FROM `$table`
+			"SELECT ".implode(", ", self::pluck($columns, 'db'))."
+			 FROM $table
 			 $where
 			 $order
 			 $limit"
@@ -335,7 +339,11 @@ class SSP {
 
 			$whereAllSql = 'WHERE '.$whereAll;
 		}
-
+		/*echo "SELECT `".implode("`, `", self::pluck($columns, 'db'))."`
+			 FROM `$table`
+			 $where
+			 $order
+			 $limit";*/
 		// Main query to actually get the data
 		$data = self::sql_exec( $db, $bindings,
 			"SELECT `".implode("`, `", self::pluck($columns, 'db'))."`

@@ -145,7 +145,64 @@
 			$this->load->view((string) FUSION_DEFAULT_THEME . '/v-transaction-index', $data);
 
 		}
+		/**
+		 * Reset Password Admin
+		 * @param  [string] $id_admin 
+		 * @param  [string] $password 
+		 * @return [boolean]
+		 */
+		public function reset_password($id_admin,$password)
+		{
+			$data = array('EM_PASSWORD' => md5($_GET['reset_password']));
+			$where = "EM_USERID = '{$_GET['id_admin']}'";
+			$str = $this->db->update_string('f_employee', $data, $where);
+			if ($this->db->query($str)) 
+				echo "1";
+			else
+				echo "0";
+		}
+		/**
+		 * Tambah Admin
+		 * @param [string] $id_admin     [ID Admin]
+		 * @param [string] $nama_lengkap [Nama Lengkap]
+		 * @param [int] $cabang       [Cabang]
+		 * @param [int] $level_admin  [Level Admin]
+		 * @param [int] $status_admin [Status]
+		 * @param [string] $password     [password]
+		 *
+		 * @return boolean
+		 */
+		public function add_admin($id_admin,$nama_lengkap,$cabang,$level_admin,$status_admin,$password)
+		{
+			$query = $this->db->get_where('f_employee', array('EM_ID' => $this->session->tempdata('user_id')));
+			$row = $query->row();
+			$data = array(
+			        'EM_USERID' => $id_admin,
+			        'EM_NAME' => $nama_lengkap,
+			        'LV_ID' => $level_admin,
+			        'EM_STATUS' => $status_admin,
+			        'EM_PASSWORD' => md5($password),
+			        'CREATED_ON' => date('Y-m-d H:i:s'),
+			        'CREATED_BY' => $row->EM_USERID,
+			        'UPDATED_ON' => date('Y-m-d H:i:s'),
+			);
 
+			if ($this->db->insert('f_employee', $data)) 
+				echo "1";
+			else
+				echo "0";
+		}
+
+		public function check_username()
+		{
+			
+			$query = $this->db->get_where('f_employee', array('EM_USERID' => $_POST['new_id_admin']));
+			if ($query->num_rows() > 0) {
+				echo 'false';
+			}
+			else
+				echo 'true';
+		}
 
 		/**
 		 * Management Admin Plasa Telkom
@@ -155,12 +212,44 @@
 		{
 			$this->auth_access();
 
+			if ($_GET) {
+				echo "<pre>";print_r($_GET);echo "</pre>";
+				// reset password 
+				if (isset($_GET['id_admin']) && isset($_GET['reset_password']) && isset($_GET['flag_action_reset'])) {
+					echo "masuk reset";
+					$this->reset_password($_GET['id_admin'],$_GET['reset_password']);
+				}
+				
+				// add
+				if (isset($_GET['new_id_admin']) && isset($_GET['nama_lengkap']) && isset($_GET['cabang']) && isset($_GET['lvl_admin']) && isset($_GET['status_admin']) && isset($_GET['password']) && isset($_GET['flag_action_add'])) {
+					echo "masuk add";
+					
+					$this->add_admin($_GET['new_id_admin'],$_GET['nama_lengkap'],$_GET['cabang'],$_GET['lvl_admin'],$_GET['status_admin'],$_GET['password']);
+				}
+
+				// aktivasi / deaktivasi
+				
+				
+				exit;
+			}
 			# print_r($this->session->tempdata()); die;
 			$data['params']			= @ base_barrel();
 			$data['content']		= 'v-backend-admin-plasa';
 
 
 			$this->load->view((string) FUSION_DEFAULT_THEME . '/v-backend-manage', $data);
+		}
+
+		public function update_admin_plasa($id)
+		{
+			$this->auth_access();
+			$data['params']			= @ base_barrel();
+			$query = $this->db->get_where('f_employee', array('EM_ID' => $id));
+			$data['query'] = $query;
+
+			
+            $this->load->view((string) FUSION_DEFAULT_THEME . '/v-backend-manage-reset-password', $data);
+            
 		}
 
 		public function ajax()
@@ -184,9 +273,14 @@
 				array( 'db' => 'EM_USERID',		'dt' => 0 ),
 				array( 'db' => 'EM_NAME',		'dt' => 1 ),
 				array( 'db' => 'EM_NAME',		'dt' => 2 ),
-				array( 'db' => 'EM_STATUS',		'dt' => 3 ),
+				array( 'db' => 'EM_STATUS',		'dt' => 3,
+					   'formatter' => function( $d, $row ) {
+			            return $d?"AKTIF":"TIDAK AKTIF";
+			        },
+				),
 				array( 'db' => 'CREATED_ON',	'dt' => 4 ),
 				array( 'db' => 'CREATED_BY',	'dt' => 5 ),
+				array( 'db' => 'EM_STATUS',			'dt' => 6 ),
 				/*array(
 					'db'        => 'start_date',
 					'dt'        => 4,
@@ -202,21 +296,53 @@
 					}
 				)*/
 			);
-
+			/*$columns = array(
+			    array( 'db' => 'first_name', 'dt' => 0 ),
+			    array( 'db' => 'last_name',  'dt' => 1 ),
+			    array( 'db' => 'position',   'dt' => 2 ),
+			    array( 'db' => 'office',     'dt' => 3 ),
+			    array(
+			        'db'        => 'start_date',
+			        'dt'        => 4,
+			        'formatter' => function( $d, $row ) {
+			            return date( 'jS M y', strtotime($d));
+			        }
+			    ),
+			    array(
+			        'db'        => 'salary',
+			        'dt'        => 5,
+			        'formatter' => function( $d, $row ) {
+			            return '$'.number_format($d);
+			        }
+			    ),
+			    array( 'db' => 'first_name', 'dt' => 0 ),
+			);*/
 			// SQL server connection information
 			$sql_details = array(
 				'user' => $CI->db->username,
 				'pass' => $CI->db->password,
 				'db'   => $CI->db->database,
 				'host' => $CI->db->hostname
-			);/*
+			);
+			/*
 			echo "<pre>";
 			print_r($_GET);
-			echo "</pre>";*/
+			echo "</pre>";
+			*/
+			if (ucwords(strtolower($this->session->tempdata('flag_regional')))=="-1") 
+			{
+				echo json_encode(
+					$this->ssp->simple($_GET, $sql_details, $table, $primaryKey, $columns)
+				);
+			}
+			else
+			{
+				echo json_encode(
+					$this->ssp->complex($_GET, $sql_details, $table, $primaryKey, $columns,'DV_ID!="<?=ucwords(strtolower($this->session->tempdata(\'flag_regional\')))?>"')
+				);
+			}
 
-			echo json_encode(
-				$this->ssp->simple($_GET, $sql_details, $table, $primaryKey, $columns )
-			);
+			
 			
 		}
 

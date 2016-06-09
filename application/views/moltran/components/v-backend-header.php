@@ -18,4 +18,3 @@
 <!-- for management -->
 <link rel="stylesheet" href="<?php echo $params['base_theme_horizontal'];?>assets/plugins/magnific-popup/dist/magnific-popup.css">
 <link rel="stylesheet" href="<?php echo $params['base_theme_horizontal'];?>assets/plugins/jquery-datatables-editable/datatables.css">
-

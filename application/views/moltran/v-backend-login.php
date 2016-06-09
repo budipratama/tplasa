@@ -39,7 +39,7 @@
 
 					<?php $this->load->view($params['base_widget'] . 'v-widget-alert'); ?>
 
-	                <form method="post" class="form-horizontal m-t-20" action="<?php echo @ site_url('authentication/user/sign-in'); ?>">
+	                <form method="post" class="form-horizontal m-t-20" action="<?php echo @ site_url('authentication/admin/sign-in'); ?>">
 
 	                    <div class="form-group">
 	                        <div class="col-xs-12">

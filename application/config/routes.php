@@ -73,7 +73,7 @@ $route['frontend/user/my-profile'] 						= 'frontend/my_profile';
 
 // backend
 $route['plasatelkom'] 									= 'backend';
-$route['authentication/user/sign-in']					= 'authentication/login';
+$route['authentication/admin/sign-in']					= 'authentication/login_admin';
 $route['authentication/user/sign-out']					= 'authentication/logout';
 $route['authentication/user/unlock-screen']				= 'authentication/unlock_screen';
 $route['backend/authorize/full-service']				= 'backend/authorize_fullservice';
@@ -94,4 +94,7 @@ $route['backend/user/my-profile'] 						= 'backend/my_profile';
 
 $route['backend/admin-plasa/manage'] 					= 'backend/manage_admin_plasa';
 $route['backend/admin-plasa/get-data'] 					= 'backend/ajax';
+$route['backend/admin-plasa/edit-data/(:num)'] 			= 'backend/update_admin_plasa/$1';
+$route['backend/check/username'] 						= 'backend/check_username';
+$route['authentication/admin/sign-out']					= 'authentication/logout_admin';
 
