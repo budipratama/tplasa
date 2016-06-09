@@ -35,22 +35,26 @@ class SSP {
 	static function data_output ( $columns, $data )
 	{
 		$out = array();
-		/*echo "<pre>";
-		print_r($data);*/
+		
 		for ( $i=0, $ien=count($data) ; $i<$ien ; $i++ ) {
 			$row = array();
 
 			for ( $j=0, $jen=count($columns) ; $j<$jen ; $j++ ) {
 				$column = $columns[$j];
-				// echo "Column ";echo "<pre>";print_r($columns[$j]);echo "</pre>";
 				// Is there a formatter?
+				$pos = strpos($columns[$j]['db'], ".");
+					if ($pos === false) {
+						$field = $columns[$j]['db'];
+					}
+					else{
+						$x = explode(".",$columns[$j]['db']);
+						$field = $x[1];
+					}
 				if ( isset( $column['formatter'] ) ) {
-					$row[ $column['dt'] ] = $column['formatter']( $data[$i][ $column['db'] ], $data[$i] );
-					// echo "if nilai db ".$columns['db']."<br>";
+					$row[ $column['dt'] ] = $column['formatter']( $data[$i][ $field ], $data[$i] );
 				}
 				else {
-					// echo "else nilai db ".$columns['db']."<br>";
-					$row[ $column['dt'] ] = $data[$i][ $columns[$j]['db'] ];
+					$row[ $column['dt'] ] = $data[$i][ $field ];
 				}
 			}
 
@@ -135,7 +139,7 @@ class SSP {
 						'ASC' :
 						'DESC';
 
-					$orderBy[] = '`'.$column['db'].'` '.$dir;
+					$orderBy[] = ''.$column['db'].' '.$dir;
 				}
 			}
 
@@ -177,7 +181,7 @@ class SSP {
 
 				if ( $requestColumn['searchable'] == 'true' ) {
 					$binding = self::bind( $bindings, '%'.$str.'%', PDO::PARAM_STR );
-					$globalSearch[] = "`".$column['db']."` LIKE ".$binding;
+					$globalSearch[] = "".$column['db']." LIKE ".$binding;
 				}
 			}
 		}
@@ -194,7 +198,7 @@ class SSP {
 				if ( $requestColumn['searchable'] == 'true' &&
 				 $str != '' ) {
 					$binding = self::bind( $bindings, '%'.$str.'%', PDO::PARAM_STR );
-					$columnSearch[] = "`".$column['db']."` LIKE ".$binding;
+					$columnSearch[] = "".$column['db']." LIKE ".$binding;
 				}
 			}
 		}
@@ -260,16 +264,16 @@ class SSP {
 
 		// Data set length after filtering
 		$resFilterLength = self::sql_exec( $db, $bindings,
-			"SELECT COUNT(`{$primaryKey}`)
-			 FROM   `$table`
+			"SELECT COUNT({$primaryKey})
+			 FROM   $table
 			 $where"
 		);
 		$recordsFiltered = $resFilterLength[0][0];
 
 		// Total data set length
 		$resTotalLength = self::sql_exec( $db,
-			"SELECT COUNT(`{$primaryKey}`)
-			 FROM   `$table`"
+			"SELECT COUNT({$primaryKey})
+			 FROM   $table"
 		);
 		$recordsTotal = $resTotalLength[0][0];
 
@@ -312,6 +316,19 @@ class SSP {
 	 */
 	static function complex ( $request, $conn, $table, $primaryKey, $columns, $whereResult=null, $whereAll=null )
 	{
+		/*$mystring = 'abc';
+		$findme   = 'a';
+		$pos = strpos($mystring, $findme);
+
+		// Note our use of ===.  Simply == would not work as expected
+		// because the position of 'a' was the 0th (first) character.
+		if ($pos === false) {
+		    echo "The string '$findme' was not found in the string '$mystring'";
+		} else {
+		    echo "The string '$findme' was found in the string '$mystring'";
+		    echo " and exists at position $pos";
+		}die();*/
+		
 		$bindings = array();
 		$db = self::db( $conn );
 		$localWhereResult = array();
@@ -339,15 +356,15 @@ class SSP {
 
 			$whereAllSql = 'WHERE '.$whereAll;
 		}
-		/*echo "SELECT `".implode("`, `", self::pluck($columns, 'db'))."`
-			 FROM `$table`
+		/*echo "SELECT ".implode(", ", self::pluck($columns, 'db'))."
+			 FROM $table
 			 $where
 			 $order
 			 $limit";*/
 		// Main query to actually get the data
 		$data = self::sql_exec( $db, $bindings,
-			"SELECT `".implode("`, `", self::pluck($columns, 'db'))."`
-			 FROM `$table`
+			"SELECT ".implode(", ", self::pluck($columns, 'db'))."
+			 FROM $table
 			 $where
 			 $order
 			 $limit"
@@ -355,16 +372,16 @@ class SSP {
 
 		// Data set length after filtering
 		$resFilterLength = self::sql_exec( $db, $bindings,
-			"SELECT COUNT(`{$primaryKey}`)
-			 FROM   `$table`
+			"SELECT COUNT({$primaryKey})
+			 FROM   $table
 			 $where"
 		);
 		$recordsFiltered = $resFilterLength[0][0];
 
 		// Total data set length
 		$resTotalLength = self::sql_exec( $db, $bindings,
-			"SELECT COUNT(`{$primaryKey}`)
-			 FROM   `$table` ".
+			"SELECT COUNT({$primaryKey})
+			 FROM   $table ".
 			$whereAllSql
 		);
 		$recordsTotal = $resTotalLength[0][0];
@@ -372,6 +389,7 @@ class SSP {
 		/*
 		 * Output
 		 */
+		
 		return array(
 			"draw"            => isset ( $request['draw'] ) ?
 				intval( $request['draw'] ) :
@@ -439,10 +457,10 @@ class SSP {
 		if ( is_array( $bindings ) ) {
 			for ( $i=0, $ien=count($bindings) ; $i<$ien ; $i++ ) {
 				$binding = $bindings[$i];
+				
 				$stmt->bindValue( $binding['key'], $binding['val'], $binding['type'] );
 			}
 		}
-
 		// Execute
 		try {
 			$stmt->execute();
