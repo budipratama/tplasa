@@ -75,26 +75,26 @@ $route['frontend/user/my-profile'] 						= 'frontend/my_profile';
 $route['plasatelkom'] 									= 'backend';
 $route['authentication/admin/sign-in']					= 'authentication/login_admin';
 $route['authentication/user/sign-out']					= 'authentication/logout';
-$route['authentication/user/unlock-screen']				= 'authentication/unlock_screen';
+$route['authentication/admin/unlock-screen']			= 'authentication/unlock_screen_admin';
 $route['backend/authorize/full-service']				= 'backend/authorize_fullservice';
 $route['backend/dashboard']								= 'backend/dashboard';
-$route['backend/lock-screen']							= 'backend/lock_screen';
 $route['backend/reporting']								= 'backend/print_report';
 $route['backend/sign-in'] 								= 'backend/login';
-$route['backend/sign-out']								= 'backend/logout';
-$route['backend/transaction/self-cashout']				= 'backend/self_cashout';
-$route['backend/transaction/self-cashout/confirm']		= 'backend/self_cashout_confirmation';
-$route['backend/transaction/self-cashout/final']		= 'backend/self_cashout_invoice';
-$route['backend/transaction/topup-account']				= 'backend/topup_account';
-$route['backend/transaction/topup-account/confirm']		= 'backend/topup_account_confirmation';
-$route['backend/transaction/topup-account/final']		= 'backend/topup_account_invoice';
-$route['backend/user/my-profile'] 						= 'backend/my_profile';
-
-
 
 $route['backend/admin-plasa/manage'] 					= 'backend/manage_admin_plasa';
-$route['backend/admin-plasa/get-data'] 					= 'backend/ajax';
+$route['backend/user/profile'] 							= 'backend/profile';
+$route['backend/admin-plasa/get-data-table']			= 'backend/admin_data_table';
 $route['backend/admin-plasa/edit-data/(:num)'] 			= 'backend/update_admin_plasa/$1';
 $route['backend/check/username'] 						= 'backend/check_username';
+$route['backend/check/terminal'] 						= 'backend/check_terminal';
+$route['backend/admin-plasa/active_or_deactive']		= 'backend/active_deactive_admin';
 $route['authentication/admin/sign-out']					= 'authentication/logout_admin';
-
+$route['backend/lock-screen']							= 'backend/lock_screen';
+$route['backend/user-plasa/manage']						= 'backend/manage_user_plasa';
+$route['backend/terminal-plasa/manage']					= 'backend/manage_terminal_plasa';
+$route['backend/user-plasa/edit']						= 'backend/edit_user';
+$route['backend/terminal-plasa/edit']					= 'backend/edit_terminal';
+$route['backend/user-plasa/get-data-table']				= 'backend/user_data_table';
+$route['backend/terminal-plasa/get-data-table']			= 'backend/terminal_data_table';
+$route['backend/user-plasa/list-kota']					= 'backend/get_kota';
+$route['backend/terminal/list-outlet']					= 'backend/get_outlet';
