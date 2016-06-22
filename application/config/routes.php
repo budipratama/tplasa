@@ -86,6 +86,8 @@ $route['backend/user/profile'] 							= 'backend/profile';
 $route['backend/admin-plasa/get-data-table']			= 'backend/admin_data_table';
 $route['backend/admin-plasa/edit-data/(:num)'] 			= 'backend/update_admin_plasa/$1';
 $route['backend/check/username'] 						= 'backend/check_username';
+$route['backend/check/terminal_outlet']					= 'backend/terminal_by_outlet';
+$route['backend/check/terminal-used']					= 'backend/terminal_used';
 $route['backend/check/terminal'] 						= 'backend/check_terminal';
 $route['backend/admin-plasa/active_or_deactive']		= 'backend/active_deactive_admin';
 $route['authentication/admin/sign-out']					= 'authentication/logout_admin';
@@ -98,3 +100,17 @@ $route['backend/user-plasa/get-data-table']				= 'backend/user_data_table';
 $route['backend/terminal-plasa/get-data-table']			= 'backend/terminal_data_table';
 $route['backend/user-plasa/list-kota']					= 'backend/get_kota';
 $route['backend/terminal/list-outlet']					= 'backend/get_outlet';
+$route['backend/terminal-plasa/view-terminal']			= 'backend/view_terminal';
+$route['backend/terminal-plasa/view-user-terminal']		= 'backend/view_user_terminal';
+$route['backend/outlet-plasa/view-outlet']				= 'backend/view_outlet';
+$route['backend/outlet-plasa/view-user-outlet']			= 'backend/view_user_outlet';
+$route['backend/outlet-plasa/view-terminal-outlet']		= 'backend/view_terminal_outlet';
+
+$route['backend/outlet-plasa/outlet'] 					= 'backend/add_outlet';
+$route['backend/admin-plasa/outlet/manage'] 			= 'backend/data_table_outlet';
+
+$route['backend/laporan/manage']						= 'backend/report';
+$route['backend/laporan/view']							= 'backend/getViewReport';
+
+$route['backend/user-plasa/getDataOutlet'] 				= 'backend/getDataOutlet';
+$route['backend/outlet-plasa/update-outlet'] 			= 'backend/update_outlet';

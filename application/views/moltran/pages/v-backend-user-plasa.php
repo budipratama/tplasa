@@ -1,13 +1,30 @@
 <?php
     $divre = ucwords(strtolower($this->session->tempdata('flag_regional')));
-    
-    $query = $this->db->get('f_terminal');
-    
-    $option_outlet = "<option value=''>Pilih ID Outlet</option>";                
-    foreach ($query->result() as $row)
+    if ($divre == "-1") 
     {
-        $option_outlet .= "<option value='{$row->TR_ID}'>{$row->TR_CODE}</option>";
+        $query = $this->db->get('f_outlet');
+        
+        $option_outlet = "<option value=''>Pilih ID Outlet</option>";                
+        foreach ($query->result() as $row)
+        {
+            $option_outlet .= "<option value='{$row->OU_ID}'>{$row->OU_NAME}</option>";
+        }
+
     }
+    else
+    {
+        $this->db->select("TR_ID,TR_CODE");
+        $this->db->from("f_terminal");
+        $this->db->where_in('OU_ID', array(1));
+        $query = $this->db->get();
+        // print_r($query->result());
+        $option_outlet = "<option value=''>Pilih ID Outlet</option>";                
+        foreach ($query->result() as $row)
+        {
+            $option_outlet .= "<option value='{$row->TR_ID}'>{$row->TR_CODE}</option>";
+        }
+    }
+    
 
     $query = $this->db->get('f_provinsi');
     
@@ -59,7 +76,7 @@
                         <table id="table_user_plasa" class="display table table-bordered table-striped" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
-                                    <th>ID ADMIN</th>
+                                    <th>USER ID</th>
                                     <th>NAMA LENGKAP</th>
                                     <th>ID TERMINAL</th>
                                     <th>TANGGAL AKTIF</th>
@@ -72,7 +89,7 @@
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <th>ID ADMIN</th>
+                                    <th>USER ID</th>
                                     <th>NAMA LENGKAP</th>
                                     <th>ID TERMINAL</th>
                                     <th>TANGGAL AKTIF</th>
@@ -99,7 +116,6 @@
             </div>
             <!-- end container -->
 
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.1.4/semantic.min.css" />
             
 
 
@@ -126,6 +142,28 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
+                                            <label for="f_operator" class="control-label">Level Operator</label>
+                                            <select class="form-control" name="f_operator" id="f_operator">
+                                                <option value="">Pilih Level Operator</option>
+                                                <option value="2">SPV</option>
+                                                <option value="3">FRONT LINER</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" id="f_t_display">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="f_terminal" class="control-label">Pilih Terminal</label>
+                                            <select class="form-control" name="f_terminal" id="f_terminal">
+                                                <option value="">Pilih Terminal</option> 
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
                                             <label for="f_nama_lengkap" class="control-label">Nama Lengkap</label>
                                             <input id="f_nama_lengkap" name="f_nama_lengkap" class="form-control" type="text" />
                                         </div>
@@ -139,18 +177,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="f_operator" class="control-label">Level Operator</label>
-                                            <select class="form-control" name="f_operator" id="f_operator">
-                                                <option value="">Pilih Level Operator</option>
-                                                <option value="2">SPV</option>
-                                                <option value="3">FRONT LINER</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
@@ -203,6 +230,7 @@
                                         <div class="form-group">
                                             <label for="cabang" class="control-label">Pilih Kota</label>
                                             <select id="f_kota" name="f_kota" class="form-control">
+                                            <option value="">Pilih Kota</option>
                                             </select>
                                         </div>
                                     </div>

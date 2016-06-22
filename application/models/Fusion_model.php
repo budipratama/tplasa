@@ -37,6 +37,27 @@
 
 		}
 
+		public function get_profile_admin($profile_id = '', $profile_userid = '')
+		{
+
+			$profile_query 				= 'SELECT EM.EM_ID AS COUNTER_ID, EM.EM_NAME AS FULL_NAME, EM.EM_EMAIL AS EMAIL_ADDR, '
+								. 'EM.EM_USERID AS USER_ID, EM.EM_STATUS AS STATUS, EM.TR_ID AS TERMINAL_ID, EM.OU_ID AS OUTLET_ID, '
+								. 'EM.LV_ID AS LEVEL_ID, LV.LV_NAME AS LEVEL_NAME, LV.LV_TYPE AS LEVEL_TYPE, CI.ID_KABUPATEN, '
+								. 'CI.NAMA_KABUPATEN, PR.ID_PROVINSI, PR.NAMA_PROVINSI, EM.EM_PHONE_NUMBER AS NO_HP, EM.EM_ABOUT_ME '
+							. 'FROM ' . TBL_EMPLOYEE . ' EM INNER JOIN ' . TBL_LEVEL . ' LV '
+								. 'INNER JOIN ' . TBL_CITY . ' CI INNER JOIN ' . TBL_PROVINCE . ' PR '
+							. 'ON EM.LV_ID = LV.LV_ID AND EM.ID_KABUPATEN = CI.ID_KABUPATEN '
+								. ' AND EM.ID_PROVINSI = PR.ID_PROVINSI '
+							. 'WHERE EM.EM_ID = "' . $profile_id . '" AND EM.EM_USERID = "' . $profile_userid . '" AND LV.LV_TYPE = "ADMIN"';
+
+			$profile_exec 				= $this->db->query($profile_query);
+
+			$profile_row 				= $profile_exec->row();
+
+
+			return ($profile_row);
+
+		}
 
 		public function sign_in($user_name = '', $password = '', $additional_params = array())
 		{

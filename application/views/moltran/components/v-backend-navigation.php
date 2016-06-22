@@ -1,3 +1,7 @@
+<!-- modal global -->
+<div id="modal_global" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" id="append-modal"></div>
+</div>
 <header id="topnav">
             <div class="topbar-main">
                 <div class="container">
@@ -16,15 +20,15 @@
 
                             <li class="dropdown user-box">
                                 <a href="" class="dropdown-toggle waves-effect waves-light profile " data-toggle="dropdown" aria-expanded="true">
-                                    <img src="<?php echo $params['base_image']; ?>ravi-vendra.png" alt="user-img" class="img-circle user-img">
+                                    <img src="<?php echo $params['base_image']; ?>budi.jpg" alt="user-img" class="img-circle user-img">
                                     <div class="user-status away"><i class="zmdi zmdi-dot-circle"></i></div>
                                 </a>
 
                                 <ul class="dropdown-menu">
-                                    <li><a href="javascript:void(0)"><i class="md md-face-unlock"></i> Profile</a></li>
-                                    <li><a href="javascript:void(0)"><i class="md md-settings"></i> Settings</a></li>
-                                    <li><a href="javascript:void(0)"><i class="md md-lock"></i> Lock screen</a></li>
-                                    <li><a href="<?php echo @ site_url('authentication/admin/sign-out'); ?>""><i class="md md-settings-power"></i> Logout</a></li>
+                                    <li><a href="<?php echo @ site_url('backend/user/profile'); ?>"><i class="md md-face-unlock"></i> Profile</a></li>
+                                    <li><a href="<?php echo @ site_url('backend/user/profile'); ?>#settings-2"><i class="md md-settings"></i> Pengaturan</a></li>
+                                    <li><a href="<?php echo @ site_url('backend/lock-screen'); ?>"><i class="md md-lock"></i> Kunci Layar</a></li>
+                                    <li><a href="<?php echo @ site_url('authentication/admin/sign-out'); ?>"><i class="md md-settings-power"></i> Logout</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -49,13 +53,13 @@
                     <div id="navigation">
                         <!-- Navigation Menu-->
                         <ul class="navigation-menu">
-                            <li class="active">
-                                <a href="<?php echo @ site_url('backend/dashboard'); ?>"><i class="md md-home"></i> <span> Dashboard </span> </a>
+                            <li>
+                                <a href="<?php echo @ site_url('backend/dashboard'); ?>"><i class="fa fa-dashboard"></i> <span> Dashboard </span> </a>
                             </li>
 
 
                             <li class="has-submenu">
-                                <a href="#"><i class="md md-redeem"></i> <span> Atur Admin </span> </a>
+                                <a href="#"><i class="fa fa-users"></i> <span> Atur Admin </span> </a>
                                 <ul class="submenu">
                                     <li class="has-submenu">
                                         <a href="#">Admin PLASA TELKOM</a>
@@ -68,24 +72,24 @@
                             </li>
 
                             <li class="has-submenu">
-                                <a href="#"><i class="md md-redeem"></i> <span> Atur Outlet </span> </a>
+                                <a href="#"><i class="fa fa-bank"></i> <span> Atur Outlet </span> </a>
                                 <ul class="submenu">
                                     <li class="has-submenu">
                                         <a href="#">Outlet PLASA TELKOM</a>
                                         <ul class="submenu">
-                                            <li><a href="material-icon.html">Manage Outlet</a></li>
+                                            <li><a href="<?php echo @ site_url('backend/outlet-plasa/outlet'); ?>">Manage Outlet</a></li>
                                         </ul>
                                     </li>
                                     <li class="has-submenu">
                                         <a href="#">Terminal PLASA TELKOM</a>
                                         <ul class="submenu">
-                                            <li><a href="material-icon.html">Manage Terminal</a></li>
+                                            <li><a href="<?php echo @ site_url('backend/terminal-plasa/manage'); ?>">Manage Terminal</a></li>
                                         </ul>
                                     </li>
                                     <li class="has-submenu">
                                         <a href="#">User PLASA TELKOM</a>
                                         <ul class="submenu">
-                                            <li><a href="material-icon.html">Manage User</a></li>
+                                            <li><a href="<?php echo @ site_url('backend/user-plasa/manage'); ?>">Manage User</a></li>
                                         </ul>
                                     </li>
                                  
@@ -93,86 +97,18 @@
                             </li>
 
                             <li class="has-submenu">
-                                <a href="#"><i class="md md-invert-colors-on"></i> <span> Log & Laporan </span> </a>
+                                <a href="#"><i class="fa fa-file"></i> <span>Laporan </span> </a>
                                 <ul class="submenu">
-                                    <li><a href="grid.html">Log Browser</a></li>
-                                    <li><a href="portlets.html">Sejarah Transaksi</a></li>
-                                </ul>
-                            </li>
-
-                            <li class="has-submenu">
-                                <a href="#"><i class="md md-invert-colors-on"></i> <span> Privatisasi </span> </a>
-                                <ul class="submenu">
-                                    <li><a href="grid.html">Profil-ku</a></li>
-                                    <li><a href="portlets.html">Ubah Password</a></li>
+                                    <!--<li><a href="grid.html">Log Browser</a></li>-->
+                                    <li><a href="<?php echo @ site_url('backend/laporan/manage');?>">Sejarah Transaksi</a></li>
                                 </ul>
                             </li>
 
                             <!-- <li class="has-submenu">
-                                <a href="#"><i class="md md-redeem"></i> <span> Privatisasi </span> </a>
+                                <a href="#"><i class="md md-invert-colors-on"></i> <span> Privatisasi </span> </a>
                                 <ul class="submenu">
-                                    <li class="has-submenu">
-                                        <a href="#">Icons</a>
-                                        <ul class="submenu">
-                                            <li><a href="material-icon.html">Material Design</a></li>
-                                            <li><a href="ion-icons.html">Ion Icons</a></li>
-                                            <li><a href="font-awesome.html">Font awesome</a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="has-submenu">
-                                        <a href="#">Forms</a>
-                                        <ul class="submenu">
-                                            <li><a href="form-elements.html">General Elements</a></li>
-                                            <li><a href="form-validation.html">Form Validation</a></li>
-                                            <li><a href="form-advanced.html">Advanced Form</a></li>
-                                            <li><a href="form-wizard.html">Form Wizard</a></li>
-                                            <li><a href="form-editor.html">WYSIWYG Editor</a></li>
-                                            <li><a href="code-editor.html">Code Editors</a></li>
-                                            <li><a href="form-uploads.html">Multiple File Upload</a></li>
-                                            <li><a href="form-xeditable.html">X-editable</a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="has-submenu">
-                                        <a href="#">Tables</a>
-                                        <ul class="submenu">
-                                            <li><a href="tables.html">Basic Tables</a></li>
-                                            <li><a href="table-datatable.html">Data Table</a></li>
-                                            <li><a href="tables-editable.html">Editable Table</a></li>
-                                            <li><a href="responsive-table.html">Responsive Table</a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="has-submenu">
-                                        <a href="#">Charts</a>
-                                        <ul class="submenu">
-                                            <li><a href="morris-chart.html">Morris Chart</a></li>
-                                            <li><a href="chartjs.html">Chartjs</a></li>
-                                            <li><a href="flot-chart.html">Flot Chart</a></li>
-                                            <li><a href="peity-chart.html">Peity Charts</a></li>
-                                            <li><a href="charts-sparkline.html">Sparkline Charts</a></li>
-                                            <li><a href="chart-radial.html">Radial charts</a></li>
-                                            <li><a href="other-chart.html">Other Chart</a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="has-submenu">
-                                        <a href="#">Maps</a>
-                                        <ul class="submenu">
-                                            <li><a href="gmap.html"> Google Map</a></li>
-                                            <li><a href="vector-map.html"> Vector Map</a></li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="has-submenu">
-                                        <a href="#">Mail</a>
-                                        <ul class="submenu">
-                                            <li><a href="inbox.html">Inbox</a></li>
-                                            <li><a href="email-compose.html">Compose Mail</a></li>
-                                            <li><a href="email-read.html">View Mail</a></li>
-                                        </ul>
-                                    </li>
+                                    <li><a href="<?php echo @ site_url('backend/user/profile'); ?>">Profil-ku</a></li>
+                                    <li><a href="<?php echo @ site_url('backend/user/profile'); ?>#settings-2">Ubah Password</a></li>
                                 </ul>
                             </li> -->
 

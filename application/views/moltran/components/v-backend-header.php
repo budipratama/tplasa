@@ -4,7 +4,14 @@
 <meta name="author" content="Coderthemes">
 <link rel="shortcut icon" href="<?php echo $params['base_image'] . 'favicon.png'; ?>">
 <title>Plasa Telkom Indonesia - Powered by T-MONEY</title>
-
+<!-- css valisation  -->
+<link rel="stylesheet" href="<?php echo $params['base_theme_horizontal'];?>assets/css/semantic.min.css" />
+<style type="text/css">
+	.table_default {
+    padding: 4px;                       
+    margin: 4px;
+}
+</style>
 <link href="<?php echo $params['base_theme_horizontal'];?>assets/plugins/sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css">
 <link href="<?php echo $params['base_theme_horizontal'];?>assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 <link href="<?php echo $params['base_theme_horizontal'];?>assets/css/core.css" rel="stylesheet" type="text/css">
@@ -15,6 +22,9 @@
 <link href="<?php echo $params['base_theme_horizontal'];?>assets/css/responsive.css" rel="stylesheet" type="text/css">
 <script src="<?php echo $params['base_theme_horizontal'];?>assets/js/modernizr.min.js"></script>
 
+
 <!-- for management -->
 <link rel="stylesheet" href="<?php echo $params['base_theme_horizontal'];?>assets/plugins/magnific-popup/dist/magnific-popup.css">
 <link rel="stylesheet" href="<?php echo $params['base_theme_horizontal'];?>assets/plugins/jquery-datatables-editable/datatables.css">
+<link href="<?php echo $params['base_theme_horizontal'];?>assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet">
+<link href="<?php echo $params['base_theme_horizontal'];?>assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet">

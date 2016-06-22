@@ -20,15 +20,14 @@
 
 		public function get_outlet()
 		{
+			$this->auth_access();
 			$query = $this->db->get_where('f_outlet', array('DV_ID' => $_POST['terminal_outlet']));
 			$option_provinsi = "<option value=''>Pilih Outlet</option>";                
 		    foreach ($query->result() as $row)
 		    {
-		    	// $option_provinsi[$row->ID_KABUPATEN] = $row->NAMA_KABUPATEN;
-		        $option_provinsi .= "<option value='{$row->DV_ID}'>{$row->OU_NAME}</option>";
+		        $option_provinsi .= "<option value='{$row->DV_ID}'>$row->OU_NAME</option>";
 		    }
 		    echo $option_provinsi;
-		    // echo json_encode($option_provinsi);exit;
 		    return $option_provinsi;
 		}
 		
@@ -37,15 +36,123 @@
 
 			if($this->session->tempdata('logged_in') == TRUE && $this->session->tempdata('user_id') != '')
 			{
-
 				if($this->session->tempdata('lock_screen') == TRUE)
 					@ redirect('backend/lock-screen');
-
 			}
 			else
-
 				@ redirect('backend/sign-in');
 
+		}
+
+		public function getViewReport()
+		{
+			$query 		= $this->db->get_where('f_transaction',array('TRANS_ID'=>$_POST['param']));
+			$row 		= $query->row();
+			$params 	= @ base_barrel();
+			$q_terminal = $this->db->get_where('f_terminal',array('TR_ID'=>$row->TR_ID));
+			$ter 		= $q_terminal->row();
+
+			$data['report'] 	= $row;
+			$data['terminal'] 	= $ter->TR_CODE;
+			
+
+			$data = array('data'=>$this->load->view($params['base_page'] . 'sejarah-transaksi/form-transaksi', $data,true));
+
+			echo json_encode($data);
+
+		}
+		public function type_transaction($tr)
+		{
+			if ($tr=='TrxPpobCashInDelima') 
+            	$tr_code = "Remittance - Cashin";  
+            if ($tr=='TrxPpobCashOutDelima') 
+				$tr_code = "Remittance - Cashout";
+			if ($tr=='TrxPpobRefundDelima') 
+				$tr_code = "Remittance - Refund";
+			if ($tr=='TrxPpobTopUpEmoney') 
+				$tr_code = "Remittance - Topup";
+			if ($tr=='TrxPpobTransferOther') 
+                $tr_code = "PPOB - Transfer ke Bank";
+            if ($tr=='TrxPpobBillPayment') 
+                $tr_code = "PPOB - Pembayaran Tagihan";
+            if ($tr=='TrxPpobAirtimeRefill-Airtime') 
+                $tr_code = "PPOB - Top Up Pulsa";
+            if ($tr=='TrxPpobAirtimeRefill-PLN') 
+                $tr_code = "PPOB - PLN Prepaid";
+            if ($tr=='TrxPpobDonation') 
+                $tr_code = "PPOB - Donasi";
+            
+            return $tr_code;
+		}
+		public function report()
+		{
+			$this->auth_access();
+
+			$role_admin = ucwords(strtolower($this->session->tempdata('flag_regional')));
+			if ($_POST) 
+			{
+				$status 		= $_POST['status'];
+				$id_terminal	= $_POST['id_terminal'];
+				$trx_type 		= $_POST['trx_type'];
+				$start_date 	= date('Y-m-d',strtotime($_POST['start_date']));
+				$end_date 		= date('Y-m-d',strtotime($_POST['end_date']));
+				
+				if ($role_admin=="-1") 
+				{
+					$terminal = $this->db->get('f_terminal');
+				}
+				else{
+					$rw = $this->db->get_where('f_outlet',array('DV_ID' => $role_admin));
+					$terminal = $this->db->get_where('f_terminal',array("OU_ID"=>$rw->row()->OU_ID));
+				}
+				$sql = "SELECT * FROM f_transaction WHERE TRANS_CURRENTTIME BETWEEN ? AND ? ";
+				$where[] = $start_date.' 00:00:00'; 
+				$where[] = $end_date.' 23:59:59';
+
+				if ($trx_type != "ALL") 
+				{
+					$sql.= " AND TRANS_CODE = ?";
+					$where[] = $trx_type;
+				}
+				if ($status != "ALL") 
+				{
+					$sql .= " AND TRANS_LASTRC = ?";
+					$where[] = $status;
+				}
+				if ($id_terminal != "") 
+				{
+					$sql .= " AND TR_ID = ?";
+					$where[] = $id_terminal;
+				}
+				$exe = $this->db->query($sql, $where);
+
+				$data['params']			= @ base_barrel();
+				$data['content']		= 'v-backend-report';
+				$data['terminal']    	= $terminal;
+				$data['data_report']    = $exe;
+				$data['status']    		= $status;
+
+				$this->load->view((string) FUSION_DEFAULT_THEME . '/v-backend-index', $data);
+			}
+			else
+			{
+				if ($role_admin=="-1") 
+				{
+					$terminal = $this->db->get('f_terminal');
+				}
+				else{
+					$rw = $this->db->get_where('f_outlet',array('DV_ID' => $role_admin));
+					$terminal = $this->db->get_where('f_terminal',array("OU_ID"=>$rw->row()->OU_ID));
+				}
+
+				$data['params']			= @ base_barrel();
+				$data['content']		= 'v-backend-report';
+				$data['terminal']    	= $terminal;
+
+				$this->load->view((string) FUSION_DEFAULT_THEME . '/v-backend-index', $data);
+			}	
+			
+			
 		}
 
 
@@ -86,6 +193,185 @@
 			$this->load->view((string) FUSION_DEFAULT_THEME . '/v-backend-index', $data);
 
 		}
+
+		public function view_outlet()
+		{
+			$query 		= $this->db->get_where('f_outlet',array('OU_ID'=>$_POST['param']));
+			$row 		= $query->row();
+			
+			$params 	= @ base_barrel();
+			$q_bank 	= $this->db->get_where('f_bank',array('BANK_ID'=>$row->OU_BANKCODE));
+			$q_cabang 	= $this->db->get_where('f_regional',array('DV_ID'=>$row->DV_ID));
+			$q_provinsi = $this->db->get_where('f_provinsi',array('ID_PROVINSI'=>$row->ID_PROVINSI));
+			$q_kabupaten= $this->db->get_where('f_kabkota',array('ID_KABUPATEN'=>$row->ID_KABUPATEN));
+
+			$data['outlet'] 	= $row;
+			$data['bank'] 		= $q_bank->row()->BANK_NAME;
+			$data['cabang'] 	= $q_cabang->row()->DV_DESCRIPTION;
+			$data['provinsi'] 	= $q_provinsi->row()->NAMA_PROVINSI;
+			$data['kabupaten'] 	= $q_kabupaten->row()->NAMA_KABUPATEN;
+			
+			$data = array('data'=>$this->load->view($params['base_page'] . 'outlet/form-detail-outlet', $data,true));
+			
+			echo json_encode($data);
+		}
+
+		public function view_terminal_outlet()
+		{
+			$query 		= $this->db->get_where('f_outlet',array('OU_ID'=>$_POST['param']));
+			$row 		= $query->row();
+			$q_terminal = $this->db->get_where('f_terminal',array('OU_ID'=>$row->OU_ID));
+			$params 	= @ base_barrel();
+
+			$data['outlet'] 	= $row;
+			$data['terminal'] 	= $q_terminal;			
+			
+			$data = array('data'=>$this->load->view($params['base_page'] . 'outlet/form-detail-terminal', $data,true));
+			
+			echo json_encode($data);
+		}
+
+		public function view_user_outlet()
+		{
+			$query 		= $this->db->get_where('f_outlet',array('OU_ID'=>$_POST['param']));
+			$row 		= $query->row();
+			$user       = $this->db->get_where('f_employee',array('OU_ID'=>$row->OU_ID));
+			$params 	= @ base_barrel();
+
+			$data['outlet'] = $row;
+			$data['user'] 	= $user;
+			
+
+			$data = array('data'=>$this->load->view($params['base_page'] . 'outlet/form-user-outlet', $data,true));
+
+			echo json_encode($data);
+		}
+
+		/**
+		 * View Terminal 
+		 * @return [type] [description]
+		 */
+		public function view_terminal()
+		{
+			// $this->debug($_POST);
+			$query = $this->db->get_where('f_terminal',array('TR_CODE'=>$_POST['param']));
+			$row = $query->row();
+			$status = $row->TR_STATUS==1?"Terminal Aktif":"Terminal Tidak Aktif";
+			$min = str_replace(".00","", $row->TR_MIN_BALANCE);
+			$max = str_replace(".00","", $row->TR_MAX_BALANCE);
+			$cur = str_replace(".00","", $row->TR_CURR_BALANCE);
+			$balance_min = number_format($row->TR_MIN_BALANCE, 0, '.', '.');
+			$balance_max = number_format($row->TR_MAX_BALANCE, 0, '.', '.');
+			$balance_cur = number_format($row->TR_CURR_BALANCE, 0, '.', '.');
+			$query_outlet = $this->db->get_where('f_outlet',array('OU_ID'=>$row->OU_ID));
+			$row_outlet = $query_outlet->row();
+			$query_regional = $this->db->get_where('f_regional',array('DV_ID'=>$row_outlet->DV_ID));
+			$row_regional = $query_regional->row();
+
+
+			$tbl = "<table width='100%' cellpadding='5' cellspacing='0' border='0'>
+					    <tbody>
+					        <tr>
+					            <td class='table_default' width='30%'>Cabang</td>
+					            <td class='table_default' width='5%'>:</td>
+					            <td class='table_default' width='65%'>{$row_regional->DV_DESCRIPTION}</td>
+					        </tr>
+					        <tr>
+					            <td class='table_default'>ID Terminal</td>
+					            <td class='table_default'>:</td>
+					            <td class='table_default'><strong>{$row->TR_CODE}</strong></td>
+					        </tr>
+					        <tr>
+					            <td class='table_default'>Nama Outlet</td>
+					            <td class='table_default'>:</td>
+					            <td class='table_default'>{$row_outlet->OU_NAME}</td>
+					        </tr>
+					        <tr>
+					            <td class='table_default'>Saldo Sekarang</td>
+					            <td class='table_default'>:</td>
+					            <td class='table_default'>IDR $balance_cur,-</td>
+					        </tr>
+					        <tr>
+					            <td class='table_default'>Saldo Minimal</td>
+					            <td class='table_default'>:</td>
+					            <td class='table_default'>IDR $balance_min,-</td>
+					        </tr>
+					        <tr>
+					            <td class='table_default'>Saldo Maksimal</td>
+					            <td class='table_default'>:</td>
+					            <td class='table_default'>IDR $balance_max,-</td>
+					        </tr>
+					        <tr>
+					            <td class='table_default'>Status Terminal</td>
+					            <td class='table_default'>:</td>
+					            <td class='table_default'>$status</td>
+					        </tr>
+					    </tbody>
+					</table>";
+			$html = "<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×</button><h4 class='modal-title t-active'>DETAIL TERMINAL</h4></div><div class='modal-body'>$tbl</div></div>";
+			echo json_encode(array('data'=>$html));
+		}
+
+		public function view_user_terminal()
+		{
+			// $this->debug($_POST);
+			$query = $this->db->get_where('f_terminal',array('TR_CODE'=>$_POST['param']));
+			$row = $query->row();
+			$query_outlet = $this->db->get_where('f_outlet',array('OU_ID'=>$row->OU_ID));
+			$row_outlet = $query_outlet->row();
+			$query_employee = $this->db->get_where('f_employee',array('OU_ID'=>$row_outlet->OU_ID));
+			$data = "";
+			foreach ($query_employee->result() as $rw)
+		    {
+		    	$status = $rw->EM_STATUS==1?"ACTIVE":"NOT ACTIVE";
+		        $data .= "<tr><td width='75'>&bull;&nbsp;<strong><em>{$rw->EM_USERID}</em></strong> - {$rw->EM_NAME}</td><td width='25'><em>$status</em></td></tr>";
+		    }		    
+
+			$tbl = "<table width='100%' cellpadding='5' cellspacing='0' border='0'>
+					    <tr>
+					        <td class='table_default' width='30%'>Nama Outlet</td>
+					        <td class='table_default' width='5%'>:</td>
+					        <td class='table_default' width='65%'><strong>{$row_outlet->OU_NAME}</strong></td>
+					    </tr>
+					    <tr>
+					        <td class='table_default'>Alamat Email</td>
+					        <td class='table_default'>:</td>
+					        <td class='table_default'>{$row_outlet->OU_EMAIL}</td>
+					    </tr>
+					    <tr>
+					        <td class='table_default'>No. Telefon</td>
+					        <td class='table_default'>:</td>
+					        <td class='table_default'>{$row_outlet->OU_PHONE_NUMBER}</td>
+					    </tr>
+					    <tr>
+					        <td class='table_default'>Alamat Lengkap</td>
+					        <td class='table_default'>:</td>
+					        <td class='table_default'>{$row_outlet->OU_ADDRESS}</td>
+					    </tr>
+					    <tr><td class='table_default' colspan='3'>&nbsp;</td></tr>
+					</table>";
+			$tbl .="<div style='clear: both;'>&nbsp;</div>
+						<table width='98%' cellpadding='5' cellspacing='1' border='0' style='margin: 5px;'>
+						    <tr bgcolor='AAAAAA'>
+						        <td class='table_default' style='text-transform: uppercase; font-weight: bold; padding-bottom: 10px; padding-top: 10px; text-align: center;' width='8%'>NO</td>
+						        <td class='table_default' style='text-transform: uppercase; font-weight: bold; padding-bottom: 10px; padding-top: 10px; text-align: center;' width='22%'>ID Terminal</td>
+						        <td class='table_default' style='text-transform: uppercase; font-weight: bold; padding-bottom: 10px; padding-top: 10px; text-align: center;' width='70%'>Daftar User</td>
+						    </tr>
+						    <tr bgcolor='DFDFDF'>
+						        <td class='table_default'>1</td>
+						        <td class='table_default'><strong>PLS0001T</strong></td>
+						        <td class='table_default'>
+						            <table width='98%' cellpadding='5' cellspacing='0' border='0' style='margin: 5px;'>
+						                $data
+						            </table>
+						        </td>
+						    </tr>
+						</table>";
+			$html = "<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×</button><h4 class='modal-title t-active'>DAFTAR USER</h4></div><div class='modal-body'>$tbl</div></div>";
+			echo json_encode(array('data'=>$html));
+		}
+
+
 		/**
 		 * Tambah user plasa telkom
 		 * 
@@ -104,6 +390,7 @@
 		 */
 		public function add_user_plasa($f_outlet_id,$f_nama_lengkap,$new_id_admin,$f_operator,$f_password,$f_email,$f_provinsi_id,$f_kota,$status_admin,$f_telphone,$f_identitas,$f_alamat_lengkap)
 		{
+			$this->auth_access();
 			$query = $this->db->get_where('f_terminal', array('TR_ID' => $f_outlet_id));
 			$row = $query->row();
 			$data = array(
@@ -122,7 +409,9 @@
 			        'TR_ID' => $f_outlet_id,
 			        'CREATED_ON' => date('Y-m-d H:i:s'),
 			        'EM_ACTIVATED_ON' => date('Y-m-d H:i:s'),
-			        'CREATED_BY' => $this->session->tempdata('full_name')
+			        'CREATED_BY' => $this->session->tempdata('user_name'),
+			        'DV_ID' => ucwords(strtolower($this->session->tempdata('flag_regional'))),
+			        'PA_ID' => ucwords(strtolower($this->session->tempdata('user_pa_id'))),
 			);
 
 			$query = $this->db->insert('f_employee', $data);
@@ -139,6 +428,7 @@
 		 */
 		public function edit_user()
 		{
+			$this->auth_access();
 			// $this->debug($_POST);
 			if (isset($_POST['get_data'])) {
 				$query = $this->db->get_where('f_employee', array('EM_USERID' => $_POST['get_data']));
@@ -154,6 +444,7 @@
 		 */
 		public function edit_terminal()
 		{
+			$this->auth_access();
 			// $this->debug($_POST);
 			if (isset($_POST['get_data'])) {
 				$query = $this->db->get_where('f_terminal', array('TR_CODE' => $_POST['get_data']));
@@ -191,6 +482,13 @@
 
 			$this->load->view((string) FUSION_DEFAULT_THEME . '/v-backend-manage', $data);
 		}
+
+		public function manage_report()
+		{
+			
+		}
+
+
 		/**
 		 * Update user plasa telkom
 		 * 
@@ -210,6 +508,7 @@
 		 */
 		public function edit_user_plasa($f_e_outlet_id,$f_e_nama_lengkap,$f_e_new_id_admin,$f_e_operator,$f_e_password,$f_e_email,$f_e_provinsi_id,$f_e_kota,$f_e_status_admin,$f_e_telphone,$f_e_identitas,$f_e_alamat_lengkap)
 		{
+			$this->auth_access();
 			$query = $this->db->get_where('f_terminal', array('TR_ID' => $f_e_outlet_id));
 			$row = $query->row();
 			$data = array(
@@ -226,7 +525,7 @@
 			        'EM_IDENTITYCODE' => $f_e_identitas,
 			        'TR_ID' => $f_e_outlet_id,
 			        'UPDATED_ON' => date('Y-m-d H:i:s'),
-			        'UPDATED_BY' => $this->session->tempdata('full_name')
+			        'UPDATED_BY' => $this->session->tempdata('username')
 			);
 
 			$where = "EM_USERID = '$f_e_new_id_admin'";
@@ -241,6 +540,7 @@
 		
 		public function add_terminal_plasa($terminal_cabang,$terminal_outlet,$terminal_prefix,$terminal_suffix,$terminal_minimum_balance,$terminal_maximum_balance,$terminal_status)
 		{
+			$this->auth_access();
 			$data = array(
 			        'OU_ID' => $terminal_outlet,
 			        'TR_CODE' => $terminal_prefix.$terminal_suffix,
@@ -249,7 +549,7 @@
 			        'TR_STATUS' => $terminal_status,
 			        // '' => $terminal_trf_template,
 			        'CREATED_ON' => date('Y-m-d H:i:s'),
-			        'CREATED_BY' => $this->session->tempdata('full_name')
+			        'CREATED_BY' => $this->session->tempdata('user_name')
 			);
 
 			$query = $this->db->insert('f_terminal', $data);
@@ -261,13 +561,14 @@
 
 		public function edit_terminal_plasa($terminal_cabang,$terminal_outlet,$terminal_prefix,$terminal_suffix,$terminal_minimum_balance,$terminal_maximum_balance,$terminal_status)
 		{
+			$this->auth_access();
 			$data = array(
 			        'OU_ID' => $terminal_outlet,
 			        'TR_MIN_BALANCE' => $terminal_minimum_balance,
 			        'TR_MAX_BALANCE' => $terminal_maximum_balance,
 			        'TR_STATUS' => $terminal_status,
 			        'UPDATED_ON' => date('Y-m-d H:i:s'),
-			        'UPDATED_BY' => $this->session->tempdata('full_name')
+			        'UPDATED_BY' => $this->session->tempdata('user_name')
 			);
 			$where = "TR_CODE = '$terminal_prefix$terminal_suffix'";
 
@@ -280,10 +581,11 @@
 
 		public function change_status($status,$tr_code)
 		{
+			$this->auth_access();
 			$data = array(			        
 			        'TR_STATUS' => $status,
 			        'UPDATED_ON' => date('Y-m-d H:i:s'),
-			        'UPDATED_BY' => $this->session->tempdata('full_name')
+			        'UPDATED_BY' => $this->session->tempdata('username')
 			);
 			$where = "TR_CODE = '$tr_code'";
 
@@ -312,7 +614,7 @@
 				}
 				if (isset($_POST['flag_action_edit'])) 
 				{
-					$this->edit_terminal_plasa($_POST['terminal_cabang'],$_POST['terminal_outlet'],$_POST['terminal_prefix'],$_POST['terminal_suffix'],$_POST['terminal_minimum_balance'],$_POST['terminal_maximum_balance'],$_POST['terminal_status']);
+					$this->edit_terminal_plasa($_POST['edit_terminal_cabang'],$_POST['edit_terminal_outlet'],$_POST['edit_terminal_prefix'],$_POST['edit_terminal_suffix'],$_POST['edit_terminal_minimum_balance'],$_POST['edit_terminal_maximum_balance'],$_POST['edit_terminal_status']);
 				}
 				if (isset($_POST['activ_deactive_flag'])) {
 					// $this->debug($_POST);
@@ -345,6 +647,7 @@
 		 */
 		public function get_kota()
 		{	
+			$this->auth_access();
 			$query = $this->db->get_where('f_kabkota', array('ID_PROVINSI' => $_POST['province']));
 			$option_provinsi = "<option value=''>Pilih Kota</option>";                
 		    foreach ($query->result() as $row)
@@ -426,6 +729,7 @@
 
 		public function getUser($OU_ID)
 		{
+			$this->auth_access();
 			$query = $this->db->select("count(1) as jml")->get_where('f_employee', array('OU_ID' => $OU_ID));
             $row = $query->row();
             return $row->jml;
@@ -436,6 +740,7 @@
 		 */
 		public function terminal_data_table()
 		{
+			$this->auth_access();
 			$CI =& get_instance();
         	$CI->load->database();
 
@@ -455,7 +760,11 @@
 			$columns = array(
 				array( 'db' => 'f_terminal.TR_CODE',		'dt' => 0 ),
 				array( 'db' => 'f_outlet.OU_NAME',		'dt' => 1 ),
-				array( 'db' => 'f_terminal.TR_CURR_BALANCE',		'dt' => 2 ),
+				array( 'db' => 'f_terminal.TR_CURR_BALANCE',		'dt' => 2 ,
+					   'formatter' => function( $d, $row ) {
+			            		return "IDR ".number_format($d,0,".",".").",-";
+			        	},
+			    ),
 				array( 'db' => 'f_terminal.CREATED_ON',		'dt' => 3,
 					   'formatter' => function( $d, $row ) {
 			            		return substr($d,0,10);
@@ -484,6 +793,8 @@
 				'host' => $CI->db->hostname
 			);
 			$role_admin = ucwords(strtolower($this->session->tempdata('flag_regional')));
+			
+			
 			if ($role_admin=="-1") 
 			{
 				echo json_encode(
@@ -492,8 +803,15 @@
 			}
 			else
 			{
+				$ou_id = $this->db->get_where('f_outlet',array('DV_ID'=>$role_admin));
+				foreach ($ou_id->result() as $row)
+			    {
+			        $id[] = $row->OU_ID;
+			    }
+			    $id_outlet = implode(",",$id);
+			    
 				echo json_encode(
-					$this->ssp->complex($_GET, $sql_details, $table, $primaryKey, $columns,"f_terminal.OU_ID = f_outlet.OU_ID")
+					$this->ssp->complex($_GET, $sql_details, $table, $primaryKey, $columns,"f_terminal.OU_ID IN($id_outlet) AND f_terminal.OU_ID = f_outlet.OU_ID")
 				);
 			}	
 		}
@@ -544,6 +862,7 @@
 
 		public function active_deactive_admin()
 		{
+			$this->auth_access();
 			$data = array('EM_STATUS' => $_GET['activ_deactive_flag']);
 
 			$where = "EM_USERID = '{$_GET['activ_deactive_username']}'";
@@ -563,7 +882,8 @@
 		 */
 		public function reset_password($id_admin,$password)
 		{
-			$data = array('EM_PASSWORD' => sha1($_GET['reset_password']),'UPDATED_ON' => date('Y-m-d H:i:s'),'UPDATED_BY' => $this->session->tempdata('full_name') );
+			$this->auth_access();
+			$data = array('EM_PASSWORD' => sha1($_GET['reset_password']),'UPDATED_ON' => date('Y-m-d H:i:s'),'UPDATED_BY' => $this->session->tempdata('username') );
 			$where = "EM_USERID = '{$_GET['id_admin']}'";
 			$str = $this->db->update_string('f_employee', $data, $where);
 			if ($this->db->query($str)) 
@@ -578,12 +898,43 @@
 		 */
 		public function check_username()
 		{
+			$this->auth_access();
 			$query = $this->db->get_where('f_employee', array('EM_USERID' => isset($_POST['new_id_admin'])?$_POST['new_id_admin']:$_POST['f_enew_id_admin'] ));
 			if ($query->num_rows() > 0) {
 				echo 'false';
 			}
 			else
 				echo 'true';
+		}
+		public function terminal_used()
+		{
+			$this->auth_access();
+			// $this->debug($_POST);
+			if ($_POST['f_terminal']=="") {
+				return true;
+			}
+			$query = $this->db->get_where('f_employee', array('TR_ID' => $_POST['f_terminal'] ));
+			if ($query->num_rows() > 0) {
+				echo 'false';
+			}
+			else
+				echo 'true';
+		}
+		/**
+		 * check username 
+		 * @return [boolean] 
+		 */
+		public function terminal_by_outlet()
+		{
+			$this->auth_access();
+			$query = $this->db->get_where('f_terminal', array('OU_ID' => isset($_POST['f_outlet_id'])?$_POST['f_outlet_id']:$_POST['f_enew_id_admin'] ));
+			$val = "<option value=''>Pilih Terminal</option>";
+			foreach($query->result() as $row){
+				$val.="<option value='{$row->TR_ID}'>{$row->TR_CODE}</option>";
+			}
+
+			echo json_encode(array('data'=>$val));
+
 		}
 
 		/**
@@ -592,7 +943,7 @@
 		 */
 		public function check_terminal()
 		{
-			
+			$this->auth_access();
 			$query = $this->db->get_where('f_terminal', array('TR_CODE' => 'PLS'.$_POST['terminal_suffix'] ));
 			if ($query->num_rows() > 0) {
 				echo 'false';
@@ -612,6 +963,7 @@
 		 */
 		public function edit_admin($id_admin,$nama_lengkap,$lvl_admin,$cabang,$status)
 		{
+			$this->auth_access();
 			$dv_id = ($lvl_admin=="-1")?"-1":$cabang;
 			$data = array(
 			        'EM_NAME' => $nama_lengkap,
@@ -619,7 +971,7 @@
 			        'EM_STATUS' => $status,
 			        'UPDATED_ON' => date('Y-m-d H:i:s'),
 			        'DV_ID' => $dv_id,
-			        'UPDATED_BY' => $this->session->tempdata('full_name'),
+			        'UPDATED_BY' => $this->session->tempdata('user_name'),
 			);
 
 			$where = "EM_USERID = '$id_admin'";
@@ -643,6 +995,7 @@
 		 */
 		public function add_admin($id_admin,$nama_lengkap,$cabang,$level_admin,$status_admin,$password,$cabang,$merchant)
 		{
+			$this->auth_access();
 			$dv_id = ($level_admin=="-1")?"-1":$cabang;
 			$data = array(
 			        'EM_USERID' => $id_admin,
@@ -651,7 +1004,7 @@
 			        'EM_STATUS' => $status_admin,
 			        'EM_PASSWORD' => sha1($password),
 			        'CREATED_ON' => date('Y-m-d H:i:s'),
-			        'CREATED_BY' => $this->session->tempdata('full_name'),
+			        'CREATED_BY' => $this->session->tempdata('user_name'),
 			        'EM_ACTIVATED_ON' => date('Y-m-d H:i:s'),
 			        'DV_ID' => $dv_id,
 			        // 'TR_ID' => 1,
@@ -726,8 +1079,15 @@
 		 */
 		public function profile()
 		{
+			// echo isset($_GET['tab']);die();
+			$tab = 1;
+			if (isset($_GET['tab'])) 
+				$tab = 2;
+
+			$this->auth_access();
 			$data['params']			= @ base_barrel();
 			$data['profile']		= $this->fusion->get_profile_admin(trim($this->session->tempdata('user_id')), trim($this->session->tempdata('user_name')));
+			$data['tab'] 			= $tab;
 			$data['content']		= 'v-backend-profile';
 
 
@@ -871,5 +1231,221 @@
 			}
 			
 			
+		}
+
+
+
+
+
+		//------ START OUTLET --------//
+		public function add_outlet()
+		{
+			$this->auth_access();
+			
+			if ($_GET) {
+				// echo isset($_GET['nama_lengkap'])."<pre>";print_r($_GET);echo "</pre>";
+				$query = $this->db->get_where('f_employee', array('EM_ID' => $this->session->tempdata('user_id')));
+				$row = $query->row();
+				
+				$data = array(
+						'OU_NAME' => $_GET['nama_lengkap'],
+						'OU_EMAIL' => $_GET['email'],
+						'OU_PHONE_NUMBER' => $_GET['telp'],
+						'OU_ACTIVATED_ON' => date('Y-m-d H:i:s'),//$_GET[''],
+						'OU_IDENTITYCODE' => $_GET['no_identitas'],
+						'OU_BANKCODE' => $_GET['bank'],
+						'OU_BANKACCOUNT' => $_GET['no_rekening'],
+						'OU_BANKHOLDER' => $_GET['pemilik_rekening'],
+						'OU_LATITUDE' => $_GET['koordinat_gb'],
+						'OU_LONGITUDE' => $_GET['koordinat_gl'],
+						'OU_ADDRESS' => $_GET['alamat'],
+						'ID_KABUPATEN' => $_GET['kota'],
+						'ID_PROVINSI' => $_GET['provinsi'],
+						'DV_ID' => $_GET['cabang'],
+						'WA_ID' => $_GET['provinsi'],
+						
+						
+						'CREATED_ON' => date('Y-m-d H:i:s'),
+						'CREATED_BY' => $row->EM_USERID,
+						'UPDATED_ON' => date('Y-m-d H:i:s'),
+				);
+				// echo "<pre>";print_r($data);echo "</pre>";exit;
+				if ($this->db->insert('f_outlet', $data)) 
+					echo "1";
+				else
+					echo "0";
+				
+				
+				exit;
+			}
+			
+			# print_r($this->session->tempdata()); die;
+			$data['params']			= @ base_barrel();
+			$data['content']		= 'v-backend-outlet';
+
+
+			$this->load->view((string) FUSION_DEFAULT_THEME . '/v-backend-manage', $data);
+		}
+
+		public function data_table_outlet()
+		{
+			// echo "hallo";
+			$CI =& get_instance();
+        	$CI->load->database();
+
+			$this->auth_access();
+			// DB table to use
+			$table = 'f_outlet';
+
+			$this->load->library('ssp');
+			// Table's primary key
+			$primaryKey = 'f_outlet.OU_ID';
+
+			// Array of database columns which should be read and sent back to DataTables.
+			// The `db` parameter represents the column name in the database, while the `dt`
+			// parameter representesents the DataTables column identifier. In this case simple
+			// indexes
+			$columns = array(
+				array( 'db' => 'f_outlet.OU_ID',		'dt' => 0 ),
+				array( 'db' => 'f_outlet.OU_NAME',		'dt' => 1 ),
+				array( 'db' => 'f_outlet.OU_ACTIVATED_ON',		'dt' => 2 ),
+				
+				array( 'db' => 'f_outlet.OU_ID',	'dt' => 3,
+					'formatter' => function( $d, $row ) {
+						$user = $this->getTerminal($d);
+						return "$user Terminal";
+					},
+				),
+				
+				array( 'db' => 'f_outlet.OU_ID',	'dt' => 4,
+					'formatter' => function( $d, $row ) {
+						$user = $this->getUser($d);
+						return "$user User";
+					},
+				),
+				
+				array( 'db' => 'f_outlet.ID_KABUPATEN',	'dt' => 5,
+					'formatter' => function( $d, $row ) {
+						$user = $this->showkotaNprovinsi($d);
+						return "$user";
+					},
+				),
+				
+			);
+			
+			// SQL server connection information
+			$sql_details = array(
+				'user' => $CI->db->username,
+				'pass' => $CI->db->password,
+				'db'   => $CI->db->database,
+				'host' => $CI->db->hostname
+			);
+			$role_admin = ucwords(strtolower($this->session->tempdata('flag_regional')));
+			// echo $role_admin;exit;
+			// $this->debug($_GET);
+			if ($role_admin=="-1") 
+			{
+				echo json_encode(
+					$this->ssp->complex($_GET, $sql_details, $table, $primaryKey, $columns)
+				);
+			}
+			else
+			{
+				echo json_encode(
+					$this->ssp->complex($_GET, $sql_details, $table, $primaryKey, $columns,"DV_ID='$role_admin'")
+				);
+			}	
+		}
+
+		public function select_get_kota()
+		{	
+			$this->auth_access();
+			$query = $this->db->get_where('f_kabkota', array('ID_PROVINSI' => $_POST['province']));
+			$kota = "<option value=''>Pilih Kota</option>";                
+			foreach ($query->result() as $row)
+			{
+				$kota .= "<option value='".$row->ID_KABUPATEN."'>{".$row->NAMA_KABUPATEN."}</option>";
+			} 
+			// echo json_encode($option_provinsi);exit;
+			echo $kota;
+		}
+
+		public function getDataOutlet()
+		{	
+			$this->auth_access();
+			if($_POST['get_data']){
+				$query = $this->db->get_where('f_outlet', array('OU_ID' => $_POST['get_data']));
+				$row = $query->row();
+				echo json_encode($row);
+			}
+		}
+
+		public function update_outlet()
+		{
+			$this->auth_access();
+			
+			if ($_GET) {
+				// echo "<br><br>".isset($_GET['nama_lengkap'])."<pre>";print_r($_GET);echo "</pre>";
+				$query = $this->db->get_where('f_employee', array('EM_ID' => $this->session->tempdata('user_id')));
+				$row = $query->row();
+				
+				$data = array(
+						'OU_NAME' => $_GET['nama_lengkap'],
+						'OU_EMAIL' => $_GET['email'],
+						'OU_PHONE_NUMBER' => $_GET['telp'],
+						'OU_ACTIVATED_ON' => date('Y-m-d H:i:s'),//$_GET[''],
+						'OU_IDENTITYCODE' => $_GET['no_identitas'],
+						'OU_BANKCODE' => $_GET['bank'],
+						'OU_BANKACCOUNT' => $_GET['no_rekening'],
+						'OU_BANKHOLDER' => $_GET['pemilik_rekening'],
+						'OU_LATITUDE' => $_GET['koordinat_gb'],
+						'OU_LONGITUDE' => $_GET['koordinat_gl'],
+						'OU_ADDRESS' => $_GET['alamat'],
+						'ID_KABUPATEN' => $_GET['kota'],
+						'ID_PROVINSI' => $_GET['provinsi'],
+						'DV_ID' => $_GET['cabang'],
+						'WA_ID' => $_GET['provinsi'],
+						
+						
+						'CREATED_ON' => date('Y-m-d H:i:s'),
+						'UPDATED_BY' => $row->EM_USERID,
+						'UPDATED_ON' => date('Y-m-d H:i:s'),
+				);
+
+				// echo "<pre>";print_r($data);echo "</pre>";exit;
+				if ($this->db->update('f_outlet', $data, "OU_ID=".$_GET['ou_id'])) 
+					echo "1";
+				else
+					echo "0";
+				
+				
+				exit; 
+			}
+			
+			# print_r($this->session->tempdata()); die;
+			$data['params']			= @ base_barrel();
+			$data['content']		= 'v-backend-outlet';
+
+
+			$this->load->view((string) FUSION_DEFAULT_THEME . '/v-backend-manage', $data);
+            
+		}
+
+		public function getTerminal($id)
+		{
+			$this->auth_access();
+			$query = $this->db->select("count(OU_ID) as jml")->get_where('f_terminal', array('OU_ID' => $id));
+            $row = $query->row();
+            return $row->jml;
+		}
+
+		public function showkotaNprovinsi($id)
+		{
+			$this->auth_access();
+			$query = $this->db->select("NAMA_KABUPATEN, ID_PROVINSI")->get_where('f_kabkota', array('ID_KABUPATEN' => $id));
+            $row = $query->row();
+			$query2 = $this->db->select("NAMA_PROVINSI")->get_where('f_provinsi', array('ID_PROVINSI' => 12));
+            $row2 = $query2->row();
+            return $row->NAMA_KABUPATEN .", ". $row2->NAMA_PROVINSI;
 		}
 	}
