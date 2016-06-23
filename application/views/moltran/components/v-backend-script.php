@@ -1441,7 +1441,7 @@
 
         <!-- script outlet -->
         <script type="text/javascript">
-        $("#provinsi").change(function(){
+			$("#provinsi,#provinsi3").change(function(){
             // alert('vangke');
                 $.ajax({
                     type:       "POST",
@@ -1449,11 +1449,26 @@
                     url:        "<?=@ site_url('backend/user-plasa/list-kota');?>",
                     success: function(msg)
                     { 
-                        $("#kota").html(msg);
-                        $("#kota").fadeIn("slow");
+                        $("#kota,#kota3").html(msg);
+                        $("#kota,#kota3").fadeIn("slow");
                     }
                 });
             });
+			
+			// $("#provinsi3").change(function(){
+                // $.ajax({
+                    // type:       "POST",
+                    // data:       "province=" + $(this).val(),
+                    // url:        "<?=@ site_url('backend/user-plasa/list-kota');?>",
+                    // success: function(msg)
+                    // { 
+                        // $("#kota3").html(data.kab);
+						// $("#kota3").val(data.ID_KABUPATEN);
+                        // $("#kota3").fadeIn("slow");
+                    // }
+                // });
+            // });
+			
             $(document).ready(function() {
                 // ubah tfooter jadi filter
                 $('#list_outlet tfoot th').each( function () {
@@ -1597,7 +1612,7 @@
                     .done(function(data){
                         // alert(data);
                         var data = eval("(function(){return " + data + ";})()");
-                        
+                        $("#kota3").html(data.kab);
                         $("#ou_id").val(data.OU_ID);
                         $("select#cabang3").val(data.DV_ID);
                         $("#nama_lengkap3").val(data.OU_NAME);
@@ -1606,6 +1621,7 @@
                         $("#alamat3").val(data.OU_ADDRESS);
                         $("#telp3").val(data.OU_PHONE_NUMBER);
                         $("select#provinsi3").val(data.ID_PROVINSI);
+                        
                         $("select#kota3").val(data.ID_KABUPATEN);
                         $("select#bank3").val(data.OU_BANKCODE);
                         $("#no_rekening3").val(data.OU_BANKACCOUNT);
