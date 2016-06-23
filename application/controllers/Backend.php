@@ -1376,6 +1376,13 @@
 			if($_POST['get_data']){
 				$query = $this->db->get_where('f_outlet', array('OU_ID' => $_POST['get_data']));
 				$row = $query->row();
+				
+				$pr = $this->db->get_where('f_kabkota',array('ID_PROVINSI'=>$row->ID_PROVINSI));
+				$dt = "<option value=''>Pilih Kota</option>";
+				foreach ($pr->result() as $rw) {
+					$dt .="<option value='{$rw->ID_KABUPATEN}'>{$rw->NAMA_KABUPATEN}</option>";
+				}
+				$row->kab = $dt;
 				echo json_encode($row);
 			}
 		}
