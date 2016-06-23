@@ -75,6 +75,11 @@ tfoot input {
 	<!-- End Footer -->
 </div>
             <!-- end container -->
+ <script type='text/javascript'>
+// a = document.getElementById('provinsi3');
+// alert(a);
+</script>
+
 
 <?php
 	$role_admin = ucwords(strtolower($this->session->tempdata('flag_regional')));
@@ -90,26 +95,28 @@ tfoot input {
 		$cabang .= "<option value='{$row->DV_ID}'>{$row->DV_DESCRIPTION}</option>";
 	}	
 	
-	$query1 = $this->db->get('f_provinsi', 0, 7);
+	$query1 = $this->db->get('f_provinsi');
 	$propinsi = "<option value=''>Pilih Propinsi</option>";                
 	foreach ($query1->result() as $row)
 	{
 		$propinsi .= "<option value='{$row->ID_PROVINSI}'>{$row->NAMA_PROVINSI}</option>";
 	}
 	
-	$query3 = $this->db->get('f_kabkota', 0, 7);
-	$kota = "<option value=''>Pilih Kota</option>";                
-	foreach ($query3->result() as $row)
-	{
-		$kota .= "<option value='".$row->ID_KABUPATEN."'>".$row->NAMA_KABUPATEN."</option>";
-	} 
+	// $query3 = $this->db->get('f_kabkota');
+	// $kota = "<option value=''>Pilih Kota</option>";                
+	// foreach ($query3->result() as $row)
+	// {
+		// $kota .= "<option value='".$row->ID_KABUPATEN."'>".$row->NAMA_KABUPATEN."</option>";
+	// } 
 	
-	$query2 = $this->db->get('f_bank', 0, 7);
+	$query2 = $this->db->get('f_bank');
 	$bank = "<option value=''>Pilih Bank</option>";                
 	foreach ($query2->result() as $row)
 	{
 		$bank .= "<option value='{$row->BANK_ID}'>{$row->BANK_NAME}</option>";
 	}
+	
+	
 ?>
 
 <!-- form tambah admin -->
@@ -259,7 +266,7 @@ tfoot input {
 					<div class="row" style="display:none">
 						<div class="col-md-12">
 							<div class="form-group">
-								<label for="new_id_admin" class="control-label">id</label>
+								<label for="" class="control-label">id</label>
 								<input name="ou_id" id="ou_id" class="form-control" type="text" />
 							</div>
 						</div>
@@ -267,7 +274,7 @@ tfoot input {
 					<div class="row">
 						<div class="col-md-12">
 							<div class="form-group">
-								<label for="new_id_admin" class="control-label">Pilih Cabang</label>
+								<label for="" class="control-label">Pilih Cabang</label>
 								<select name="cabang" id="cabang3" class="form-control">
 									<?=$cabang;?>
 								</select>
@@ -285,7 +292,7 @@ tfoot input {
 					<div class="row">
 						<div class="col-md-12">
 							<div class="form-group">
-								<label for="nama_lengkap" class="control-label">Alamat Email</label>
+								<label for="" class="control-label">Alamat Email</label>
 								<input name="email" id="email3" class="form-control" type="text" />
 							</div>
 						</div>
@@ -293,7 +300,7 @@ tfoot input {
 					<div class="row">
 						<div class="col-md-12">
 							<div class="form-group">
-								<label for="nama_lengkap" class="control-label">No Identitas</label>
+								<label for="" class="control-label">No Identitas</label>
 								<input name="no_identitas" id="no_identitas3" class="form-control" type="text" />
 							</div>
 						</div>
@@ -301,7 +308,7 @@ tfoot input {
 					<div class="row">
 						<div class="col-md-12">
 							<div class="form-group">
-								<label for="lvl_admin" class="control-label">Alamat Lengkap</label>
+								<label for="" class="control-label">Alamat Lengkap</label>
 								<div class="col-md-14">
 								<textarea name="alamat" id="alamat3" class="form-control" rows="5"></textarea>
 							</div>
@@ -311,7 +318,7 @@ tfoot input {
 					<div class="row">
 						<div class="col-md-12">
 							<div class="form-group">
-								<label for="cabang" class="control-label">No Telefon</label>
+								<label for="telp" class="control-label">No Telefon</label>
 								<input id="telp3" name="telp" class="form-control" type="text" />
 							</div>
 						</div>
@@ -319,7 +326,7 @@ tfoot input {
 					<div class="row">
 						<div class="col-md-12">
 							<div class="form-group">
-								<label for="status_admin" class="control-label">Provinsi</label>
+								<label for="" class="control-label">Provinsi</label>
 								 <select id="provinsi3" name="provinsi" class="form-control">
 									<?=$propinsi;?>
 								</select>
@@ -331,7 +338,6 @@ tfoot input {
 							<div class="form-group">
 								<label for="kota" class="control-label">Kota</label>
 								 <select id="kota3" name="kota" class="form-control">
-									<?=$kota;?>
 								</select>
 							</div>
 						</div>
